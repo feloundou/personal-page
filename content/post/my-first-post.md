@@ -15,7 +15,7 @@ stateDiagram
 ExploreIdeas --> Pursue
 ExploreIdeas --> Discard
 Discard --> ExploreIdeas
-PursueNew --> Experiment
+Pursue --> Experiment
 Experiment --> MinorSuccess
 Experiment --> Fail
 Experiment --> Breakthrough
