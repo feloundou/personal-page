@@ -21,8 +21,8 @@ Experiment --> AbjectFailure
 Experiment --> Breakthrough
 AbjectFailure --> Explore
 MinorSuccess --> Experiment
-Breakthrough --> Probe and Discuss
-ProbeandDiscuss --> Project
+Breakthrough --> ProbeDiscuss
+ProbeDiscuss --> Project
 Project --> [*]
 
 
@@ -58,6 +58,4 @@ My technical set-up is relatively simple, and has involved:
 - [x] Install desired packages
 - [x] Enable Jupyter notebook to run remotely on VM, via port forwarding
 - [ ] As best practice, when trying to work with specific tutorials where one can anticipate package version conflicts, work within virtual environments
-
-
 
