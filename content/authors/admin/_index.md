@@ -70,5 +70,5 @@ user_groups:
 - Visitors
 ---
 
-This page will serve as a repository to share my journey to learning how to help machines learn. I will also be documenting daily discoveries on my Roam notes page. You may reach out to me to get reading permissions. 
+This site will serve as a repository to share a journey towards learning how to help machines learn, an endeavour supported by OpenAI. I will document my daily discoveries on my Roam notes page. You may reach out to me to get reading permissions or to share feedback. 
 
