@@ -1,6 +1,6 @@
 ---
 # Display name
-title: Florentine (Tyna) Eloundou
+title: Tyna Eloundou
 
 # Username (this should match the folder name)
 authors:
@@ -15,7 +15,7 @@ role: Scholar
 # Organizations/Affiliations
 organizations:
 - name: OpenAI
-  url: ""
+  url: "https://openai.com/"
 
 # Short bio (displayed in user profile at end of posts)
 bio: My research interests include reinforcement learning and distributed systems.
@@ -70,5 +70,5 @@ user_groups:
 - Visitors
 ---
 
-Tyna Eloundou is an OpenAI scholar. 
+This page will serve as a repository to share my journey to learning how to help machines learn. I will also be documenting daily discoveries on my Roam notes page. You may reach out to me to get reading permissions. 
 
