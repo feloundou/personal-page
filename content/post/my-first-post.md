@@ -14,7 +14,7 @@ stateDiagram
 [*] --> Explore
 Explore --> PursueNewIdeas
 Explore --> DiscardBadIdeas
-DiscardBadIdeas --> [*]
+DiscardBadIdeas --> [Explore]
 PursueNewIdeas --> Experiment
 Experiment --> MinorSuccess
 Experiment --> AbjectFailure
@@ -58,4 +58,8 @@ My technical set-up is relatively simple, and has involved:
 - [x] Install desired packages
 - [x] Enable Jupyter notebook to run remotely on VM, via port forwarding
 - [ ] As best practice, when trying to work with specific tutorials where one can anticipate package version conflicts, work within virtual environments
+
+
+For the next few weeks, I plan to complete the first 3 experiments I have in mind, and be on strong enough footing to pursue one or two passable ideas. See you then.
+
 
