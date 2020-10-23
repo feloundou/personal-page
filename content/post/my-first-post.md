@@ -11,19 +11,19 @@ My scholars class has been given ample resources: mentorship, compute, repositor
 
 ```mermaid
 stateDiagram
-[*] --> Exploratory Reading
-Exploratory Reading --> Pursue New Ideas
-Exploratory Reading --> Discard Bad Ideas
-Discard Bad Ideas --> [*]
-Pursue New Ideas --> Experiment
-Experiment --> Minor Success
-Experiment --> Abject Failure
+[*] --> Explore
+Explore --> PursueNewIdeas
+Explore --> DiscardBadIdeas
+DiscardBadIdeas --> [*]
+PursueNewIdeas --> Experiment
+Experiment --> MinorSuccess
+Experiment --> AbjectFailure
 Experiment --> Breakthrough
-Abject Failure --> Exploratory Reading
-Minor Success --> Experiment
+AbjectFailure --> Explore
+MinorSuccess --> Experiment
 Breakthrough --> Probe and Discuss
-Probe and Discuss --> Mold into Project
-Mold into Project --> [*]
+ProbeandDiscuss --> Project
+Project --> [*]
 
 
 ```
@@ -49,7 +49,7 @@ Presentation:             des9, after des8
 
 I am thankful for the {{< spoiler text="compute sponsorship" >}}
 on Microsoft Azure!
-{{< /spoiler >}}  we have been granted, which releases us from what I imagine would be most project ideation constraints. In essence, we can attempt nearly anything that can conceivably be attempted with modern computing power. 
+{{< /spoiler >}} that we have been granted, which releases us from what I imagine would be most project ideation constraints. In essence, we can attempt nearly anything that can conceivably be attempted with modern computing power. 
 
 My technical set-up is relatively simple, and has involved:
 
