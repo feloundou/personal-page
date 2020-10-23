@@ -14,7 +14,7 @@ stateDiagram
 [*] --> Explore
 Explore --> PursueNewIdeas
 Explore --> DiscardBadIdeas
-DiscardBadIdeas --> [Explore]
+DiscardBadIdeas --> Explore
 PursueNewIdeas --> Experiment
 Experiment --> MinorSuccess
 Experiment --> AbjectFailure
