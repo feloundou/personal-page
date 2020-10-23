@@ -22,8 +22,10 @@ bio: My research interests include reinforcement learning and distributed system
 
 interests:
 - Artificial Intelligence
-- Computational Linguistics
-- Information Retrieval
+- Reinforcement Learning
+- Decision Theory
+- Mechanism Design
+- Distributed Systems
 
 education:
   courses:
