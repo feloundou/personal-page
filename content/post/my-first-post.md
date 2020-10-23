@@ -11,15 +11,15 @@ My scholars class has been given ample resources: mentorship, compute, repositor
 
 ```mermaid
 stateDiagram
-[*] --> Explore
-Explore --> PursueNew
-Explore --> DiscardBad
-DiscardBad --> Explore
+[*] --> ExploreIdeas
+ExploreIdeas --> Pursue
+ExploreIdeas --> Discard
+Discard --> ExploreIdeas
 PursueNew --> Experiment
 Experiment --> MinorSuccess
-Experiment --> AbjectFailure
+Experiment --> Fail
 Experiment --> Breakthrough
-AbjectFailure --> DiscardBad
+Fail --> ExploreIdeas
 MinorSuccess --> Experiment
 Breakthrough --> ProbeDiscuss
 ProbeDiscuss --> Project
