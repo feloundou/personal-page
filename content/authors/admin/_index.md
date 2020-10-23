@@ -29,10 +29,10 @@ education:
   courses:
   - course: MSc in Humanities and Social Sciences
     institution: California Institute of Technology
-    year: 2018
+    year: 
   - course: BSc in Economics
     institution: Cornell University
-    year: 2014
+    year: 
 
 # Social/Academic Networking
 # For available icons, see: https://sourcethemes.com/academic/docs/page-builder/#icons
