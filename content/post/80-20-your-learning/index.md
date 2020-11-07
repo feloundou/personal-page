@@ -4,7 +4,7 @@ date: 2020-11-06T02:34:56.265Z
 draft: false
 featured: false
 tags:
-  - ai;learning;study
+  - ai
 image:
   filename: featured
   focal_point: Smart
@@ -12,7 +12,7 @@ image:
 ---
 The past 2 weeks have been a blur, wherein I read papers that significantly advanced my understanding of the evolution of deep learning research and, more broadly, how to learn.
 
-The **Pareto principle**, or the **80/20 rule**, is a heuristic rule, derived from the application of a power law distribution, a general rule of thumb that 80% of "results" come from 20% of "inputs." In computing, there have been several anecdotes related to this rule. For instance, in 2002, \[Microsoft](https://www.crn.com/news/security/18821726/microsofts-ceo-80-20-rule-applies-to-bugs-not-just-features.htm) reported that 80% of crashed in Windows were caused by 20% of present bugs. Similarly, it was found that 80% of  code can be written in 20% of total allocated time. The examples exceed my allocated space here.
+The **Pareto principle**, or the **80/20 rule**, is a heuristic rule, derived from the application of a power law distribution, a general rule of thumb that 80% of "results" come from 20% of "inputs." In computing, there have been several anecdotes related to this rule. For instance, in 2002, [Microsoft](https://www.crn.com/news/security/18821726/microsofts-ceo-80-20-rule-applies-to-bugs-not-just-features.htm) reported that 80% of crashed in Windows were caused by 20% of present bugs. Similarly, it was found that 80% of  code can be written in 20% of total allocated time. The examples exceed my allocated space here.
 
 Approaching my learning in this manner has helped me make progress in my learning, focusing on the big concepts, and leaving the remaining 20% of material, which I consider the details, to later down the line. 
 
@@ -49,7 +49,6 @@ Partial functions allow one to derive a function with x parameters to a function
 from functools import partial
 from tqdm import tqdm
 tqdm = partial(tqdm, position=0, leave = True)
-
 ```
 
 Here we set the path variables/objects. Make sure to make these relative to current directory, for porting back and forth from GPU.
@@ -166,10 +165,6 @@ Now, we can take the Module class to create our 3-channel images. Her, we have a
 
 Conv Layer -> ReLU -> Max Pooling -> Conv Layer -> ReLU -> Max Pooling -> ReLU(Fully Connected) -> ReLU(Fully Connected) -> Fully Connected 
 
-
-
-
-
 ```python
 # Define a CNN and modify to take 3-channel images
 
@@ -252,8 +247,6 @@ Finished Training
 
 If we have a trained model we are satisfied with, we can save, to deploy or further improve later. 
 
-
-
 After this, we can do some visual inspection (take a batch from the test dataloader, assign them to images and view their predicted and real labels).
 
 ```python
@@ -321,8 +314,6 @@ def accuracy_monitor(trained_net, n_class):
             classes[i], 100 * class_correct[i] / class_total[i]))
         
 ```
-
-
 
 Overall, our model gets it right about half the time. It is fairly good at recognizing car and plane and poor at recognizing birds and dogs.
 
@@ -444,8 +435,6 @@ _resnet_stem(3,32,32,64)
  MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)]
 ```
 
-
-
 After defining my ResBlock, I can define the ResNet class.
 
 ```python
@@ -505,8 +494,6 @@ class ResNet(nn.Module):
         return output
 ```
 
-
-
 We can define the ResNet based on the seminal paper's defined number of ResBlocks. For the smallest net, there are 4 groups of 2 ResBlocks.
 
 ```python
@@ -527,7 +514,6 @@ def resnet34():
 
 ```python
 net18 = resnet18()
-
 ```
 
 Based on our earlier code, we can write our little trainer function.
@@ -561,8 +547,6 @@ def net_trainer(trainloader, optimizer, criterion, neural_net, n_epochs =2, prin
     print('Finished Training')
 ```
 
-
-
 It turns out that the stem was not very effective at increasing accuracy, so I did away with that stem layer. So, let's forget I ever mentioned it.
 
 ```python
@@ -570,7 +554,6 @@ net_trainer(trainloader=trainloader,
             criterion=nn.CrossEntropyLoss(), 
             optimizer= optim.SGD(net18.parameters(), lr=0.001, momentum=0.9), 
             neural_net=net18)
-
 ```
 
 ```
@@ -607,7 +590,7 @@ Accuracy of  ship : 87 %
 Accuracy of truck : 81 %
 ```
 
-Implementing tricks. Earlier, we employed some standard transforms to our data to see performance improvements. There are some other tricks that I tried, including: **different initialization strategies, label smoothing, Resnet-D,** etc. Here, I demonstrate how I added [**xavier init**](http://proceedings.mlr.press/v9/glorot10a/glorot10a.pdf), and how little it added.
+Implementing tricks. Earlier, we employed some standard transforms to our data to see performance improvements. There are some other tricks that I tried, including: **different initialization strategies, label smoothing, Resnet-D,** etc. Here, I demonstrate how I added **[xavier init](http://proceedings.mlr.press/v9/glorot10a/glorot10a.pdf)**, and how little it added.
 
 ```python
 # xavier initialization
@@ -731,8 +714,6 @@ Accuracy of horse : 80 %
 Accuracy of  ship : 81 %
 Accuracy of truck : 87 %
 ```
-
-
 
 To conclude, I ended up with a net that is fairly good at identifying cars and trucks, and poor at identifying birds and cats. 
 
