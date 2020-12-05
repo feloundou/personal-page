@@ -31,14 +31,26 @@ Imitation learning, or apprenticeship learning, is the process of learning from 
 
 Independent of particular methods, I am curious about teaching an agent to learn somewhere along a gradient of constraints. Suppose you have Agent 007, whose prime directive is to achieve his goal by any means necessary. In your roster also features Agent Bob Ross, who has the same directive but must achieve his goal with a constraint: do it as safely as possible, or you will be punished. (Safety is just one choice of constraint, generalizable without loss of generality). They are both excellent at their jobs   and you have recorded them in action. Now, you are looking to train a series of brand new agents, who is not as reckless as 007, but not quite as safe as Bob Ross, at different arbitrary thresholds of the safety constraints. You could take the time to painstakingly design the reward functions, so they respond just so. Or you could try to find, for each agent, a knob to turn to designate them as 60% 007 and 40% Bob Ross, or vice versa. **This is the crux of my research project.** (At the time of writing).
 
-
-
 Here, I present a visual summary of the same ideas.
-
-
 
 ![Current sketch of approach](safety.png "The Safety Case")
 
-
-
 As I embark on this project, I have potential consequent research threads to unspool, but they are highly speculative and auxiliary to the core research question presented above.
+
+For purposes of accountability, here is my moving Gantt chart I presented in my very first post:
+
+```mermaid
+
+gantt
+section Gantt
+Compute set-up :done,    des1, 2020-10-12,2020-10-23
+ResNet in PyTorch      :active,  des2, 2020-10-16, 14d
+Language Model in PyTorch:         des3, after des1, 14d
+OpenAI Gym Expts:         des4, after des2, 4d
+Readings and Study Group: active, des5, after des1, 30d
+Data Experiments:         des6, after des2, 21d
+Research Plan:            des7, 2020-11-15,2020-11-30
+Research Project:         des8, 2020-12-01-2021-04-01
+Presentation:             des9, after des8
+
+```
