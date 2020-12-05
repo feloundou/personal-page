@@ -40,7 +40,6 @@ As I embark on this project, I have potential consequent research threads to uns
 For purposes of accountability, here is my moving Gantt chart I presented in my very first post:
 
 ```mermaid
-
 gantt
 section Gantt
 Compute set-up :done,    des1, 2020-10-12,2020-10-23
