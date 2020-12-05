@@ -37,7 +37,7 @@ Here, I present a visual summary of the same ideas.
 
 As I embark on this project, I have potential consequent research threads to unspool, but they are highly speculative and auxiliary to the core research question presented above.
 
-For purposes of accountability, here is my moving Gantt chart I presented in my very first post:
+For purposes of accountability, here is the moving Gantt chart I presented in my very first post:
 
 ```mermaid
 gantt
@@ -49,7 +49,25 @@ OpenAI Gym Expts:         des4, after des2, 4d
 Readings and Study Group: active, des5, after des1, 30d
 Data Experiments:         des6, after des2, 21d
 Research Plan:            des7, 2020-11-15,2020-11-30
-Research Project:         des8, 2020-12-01-2021-04-01
+Research Project:         des8, 2020-12-01,2021-04-01
 Presentation:             des9, after des8
 
 ```
+
+Here is what really happened, fairly close to previous estimation:
+```mermaid
+gantt
+section Gantt
+Compute set-up :done,    des1, 2020-10-12,2020-10-23
+ResNet in PyTorch      :active,  des2, 2020-10-23, 14d
+Transformer in PyTorch:         des3, after des1, 14d
+OpenAI Gym Expts:         des4, after des2, 4d
+Readings and Study Group: active, des5, after des1, 30d
+Data Experiments:         des6, after des2, 21d
+Research Plan:            des7, 2020-11-15,2020-11-30
+Research Project:         des8, 2020-12-01,2021-04-01
+Presentation:             des9, 2020-12-04
+
+```
+
+Once I get some traction with the set up for my project, I will update the project Gantt chart to be more detailed about experiments I hope to run.
