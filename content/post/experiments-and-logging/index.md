@@ -27,6 +27,20 @@ future experiments, this would be lacking. I decided to adopt Weights and Biases
 
 An unexpected boon from this choice was the Hyperparameter sweep functionality, that can be set-up with uncanny ease. Indeed, all you need to do is select the sweep mode: \["grid", "bayes"] and set your parameter values in the acceptable formats.
 
-
-
 The output you receive is displayed on the Weights and Biases page and can be downloaded in report form.
+
+
+
+
+
+| Name          | Runtime |     | Hostname    | Notes | State    | Sweep    | Tags | cost_gamma | cost_lim | gamma | hid |     | l   | seed | steps | steps_per_epoch | cost rate         | cumulative cost | epoch |
+| ------------- | ------- | --- | ----------- | ----- | -------- | -------- | ---- | ---------- | -------- | ----- | --- | --- | --- | ---- | ----- | --------------- | ----------------- | --------------- | ----- |
+| firstsweep    | 118     |     | tyna-server | \-    | finished | yy302nxi |      | 0.99       | 10       | 0.98  | 64  |     | 2   | 456  | 4000  |                 | 0.099788461538462 | 5189            | 12    |
+| firstsweep    | 427     |     | tyna-server | \-    | finished | yy302nxi |      | 0.99       | 10       | 0.98  | 64  |     | 2   | 123  | 4000  |                 | 0.073775          | 14755           | 49    |
+| firstsweep    | 411     |     | tyna-server | \-    | finished | yy302nxi |      | 0.99       | 10       | 0.98  | 64  |     | 2   | 99   | 4000  |                 | 0.06565           | 13130           | 49    |
+| firstsweep    | 375     |     | tyna-server | \-    | finished | yy302nxi |      | 0.99       | 10       | 0.98  | 64  |     | 1   | 999  | 4000  |                 | 0.07765           | 15530           | 49    |
+| firstsweep    | 336     |     | tyna-server | \-    | finished | yy302nxi |      | 0.99       | 10       | 0.98  | 64  |     | 1   | 456  | 4000  |                 | 0.070185          | 14037           | 49    |
+| firstsweep    | 361     |     | tyna-server | \-    | finished | yy302nxi |      | 0.99       | 10       | 0.98  | 64  |     | 1   | 99   | 4000  |                 | 0.063705          | 12741           | 49    |
+| rose-sweep-1  | 0       |     |             | \-    | crashed  | yy302nxi |      |            |          | 0.98  | 64  |     | 1   | 0    |       |                 |                   |                 |       |
+| secondrun     | 360     |     | tyna-server | \-    | finished |          |      |            | 10       | 0.99  | 64  | 64  | 2   | 0    | 4000  | 4000            | 0.075685          | 15137           | 49    |
+| pretty-bird-1 | 330     |     | tyna-server | \-    | failed   |          |      |            |          |       |     |     |     | 0    |       |                 | 0.073475          |                 | 49    |
