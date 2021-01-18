@@ -14,7 +14,7 @@ Policy Gradient methods are premised on the idea that a **policy that selects ac
 
 For vanilla policy gradients (such REINFORCE), the objective used to optimize the neural network looks like:
 
-$$L^{PG}(\theta) = \hat{\Aver{E}}*t[log \pi*{\theta}(a_t|s_t) \hat{\Aver{A}}_t]$$
+$$L^{PG}(\theta) = \hat{\mathop{\mathbb{E}}}}t\[log \pi{\theta}(a_t|s_t) \hat{\mathop{\mathbb{A}}}}_t]$$
 
 where the $\hat{\Aver{A}}$ could be the discounted return (as in
 REINFORCE) or the advantage function (as in GAE) for example. Taking a
@@ -27,9 +27,7 @@ for instance a function that uses the probability of the action under
 the current policy $(\pi(a|s))$, divided by the probability of the
 action under your previous policy $(\pi_{old}(a|s))$, looking like:
 
-
-
-$$r*t(\theta) = \frac{\pi*{\theta}(a*t|s_t)}{\pi*{\theta_old}(a_t|s_t)}$$
+$$rt(\theta) = \frac{\pi{\theta}(at|s_t)}{\pi{\theta_old}(a_t|s_t)}$$
 
 This expression is greater than 1 when when $a_t$ is more probable for
 the current policy than it is for the old policy; it will be between 0
@@ -46,7 +44,7 @@ large/catastrophic gradient steps. To stabilize these effects, Proximal Policy O
 
 The Clipped Surrogate Objective function is specified as:
 
-$$L^{CLIP}(\theta) = \hat{\Aver{E}}_t\[ min(r_t(\theta) \hat{\Aver{A}}_t, clip(r_t(\theta), 1-\epsilon, 1+\epsilon)\hat{\Aver{A}}_t]$$
+$$L^{CLIP}(\theta) = \hat{\mathop{\mathbb{E}}}}_t\[ min(r_t(\theta) \hat{\mathop{\mathbb{A}}}}_t, clip(r_t(\theta), 1-\epsilon, 1+\epsilon)\hat{\mathop{\mathbb{A}}}}_t]$$
 
 The clipping parameter, $\epsilon$ is chosen to bound the $r_t$ value. For instance, if $\epsilon$ is 0.2, then $r_t$ can vary between 0.8 and 1.2.
 
@@ -56,7 +54,7 @@ This variant is the more popular variance of the two, as it does not explicitly 
 
 The other variant of PPO penalizes large changes in the policy via a penalty parameter for the KL divergence between the two policies. This penalty coefficient adapts over the course of training to achieve some target value of divergence. The target divergence used is another hyperparameter to be tuned.
 
-$$L^{KLPenalty}(\theta) = \hat{\Exp{E}}t\[ \frac{\pi{\theta}(at|s_t)}{\pi{\theta_old}(at|s_t)} \hat{\mathop{\mathbb{A}}}_t - \beta KL[\pi{\theta_old}(.|s_t), \pi(.|s_t) ]]$$
+$$L^{KLPenalty}(\theta) = \hat{\mathop{\mathbb{E}}}}t\[ \frac{\pi{\theta}(at|s_t)}{\pi{\theta_old}(at|s_t)} \hat{\mathop{\mathbb{A}}}_t - \beta KL[\pi{\theta_old}(.|s_t), \pi(.|s_t) ]]$$
 
 
 
