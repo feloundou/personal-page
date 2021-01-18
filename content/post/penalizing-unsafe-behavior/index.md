@@ -1,5 +1,5 @@
 ---
-title: Penalizing Unsafe Behavior
+title: Learning with Constraints
 date: 2021-01-15T19:42:34.221Z
 draft: false
 featured: false
@@ -8,19 +8,18 @@ image:
   focal_point: Smart
   preview_only: false
 ---
-\maketitle
-Proximal Policy Optimization Methods
-====================================
+Reinforcement Learning as a field has advanced in lockstep with advances in compute power. Iterative generation of tricks improved performance by learning the **values of actions.** The value function is therefore necessary for choosing actions.
 
-For vanilla policy gradients (such REINFORCE), the objective used to
-optimize the neural network looks like:
+Policy Gradient methods are premised on the idea that a **policy that selects actions** can be learned without a value function. 
 
-$$L^{PG}(\theta) = \hat{\Aver{E}}_t[log \pi_{\theta}(a_t|s_t) \hat{\Aver{A}}_t]$$
+For vanilla policy gradients (such REINFORCE), the objective used to optimize the neural network looks like:
+
+$$L^{PG}(\theta) = \hat{\Aver{E}}*t[log \pi*{\theta}(a_t|s_t) \hat{\Aver{A}}_t]$$
 
 where the $\hat{\Aver{A}}$ could be the discounted return (as in
 REINFORCE) or the advantage function (as in GAE) for example. Taking a
 gradient ascent step on this loss with respect to the network parameters
-incentivizes the agent to pursue actions that led to higher reward.\
+incentivizes our agent to pursue actions that led to higher reward.\
 The vanilla policy gradient method uses the log probability of your
 action $(log \pi(a|s))$ to trace the impact of the actions (i.e. credit
 assignment), but you could imagine using another function to do this,
@@ -28,7 +27,7 @@ for instance a function that uses the probability of the action under
 the current policy $(\pi(a|s))$, divided by the probability of the
 action under your previous policy $(\pi_{old}(a|s))$, looking like:
 
-$$r_t(\theta) = \frac{\pi_{\theta}(a_t|s_t)}{\pi_{\theta old}(a_t|s_t)}$$
+$$r*t(\theta) = \frac{\pi*{\theta}(a*t|s_t)}{\pi*{\theta old}(a_t|s_t)}$$
 
 This expression is greater than 1 when when $a_t$ is more probable for
 the current policy than it is for the old policy; it will be between 0
@@ -39,39 +38,42 @@ than the old one receive higher credit for the difference.
 
 If the action is much more probable under the current policy,
 $r_t(\theta)$ might be so large it leads to taking extremely
-large/catastrophic gradient steps. To stabilize these effects, PPO
-proposes 2 mechanisms: PPO-CLIP and PPO-Penalty.
+large/catastrophic gradient steps. To stabilize these effects, Proximal Policy Optimization (PPO) proposes 2 mechanisms: PPO-CLIP and PPO-Penalty.
 
-PPO-CLIP
---------
+## PPO-CLIP
 
 The Clipped Surrogate Objective function is specified as:
 
-$$L^{CLIP}(\theta) = \hat{\Aver{E}}_t[ min(r_t(\theta) \hat{\Aver{A}}_t, clip(r_t(\theta), 1-\epsilon, 1+\epsilon)\hat{\Aver{A}}_t]$$
+$$L^{CLIP}(\theta) = \hat{\Aver{E}}_t\[ min(r_t(\theta) \hat{\Aver{A}}_t, clip(r_t(\theta), 1-\epsilon, 1+\epsilon)\hat{\Aver{A}}_t]$$
 
-The clipping parameter, $\epsilon$ is chosen to bound the $r_t$ value.
-For instance, if $\epsilon$ is 0.2, then $r_t$ can vary between 0.8 and
-1.2.
+The clipping parameter, $\epsilon$ is chosen to bound the $r_t$ value. For instance, if $\epsilon$ is 0.2, then $r_t$ can vary between 0.8 and 1.2.
 
-PPO-Penalty
------------
+This variant is the more popular variance of the two, as it does not explicitly have a constraint, but rather uses its clipping hyperparameter to minimize the maximum distance between the proposed new policy and the current policy.
 
-From the paper, \"Another approach, which can be used as an alternative
-to the clipped surrogate objective, or in addition to it, is to use a
-penalty on KL divergence, and to adapt the penalty coefficient so that
-we achieve some target value of the KL divergence $d_target$ each policy
-update.\"
+## PPO-Penalty
 
-$$L^{KL-Penalty}(\theta) = \hat{\Aver{E}}_t[ \frac{\pi_{\theta}(a_t|s_t)}{\pi_{\theta old}(a_t|s_t)} \hat{\Aver{A}}_t - \beta KL[\pi_{\theta old}(.|s_t), \pi(.|s_t) ]]$$
+The other variant of PPO penalizes large changes in the policy via a penalty parameter for the KL divergence between the two policies. This penalty coefficient adapts over the course of training to achieve some target value of divergence. The target divergence is another hyperparameter to be tuned.
+
+$$L^{KL-Penalty}(\theta) = \hat{\Aver{E}}*t[ \frac{\pi*{\theta}(a*t|s_t)}{\pi*{\theta old}(a*t|s_t)} \hat{\Aver{A}}_t - \beta KL[\pi*{\theta old}(.|s_t), \pi(.|s_t) ]]$$
+
+## **Costs**
+
+In some environments, agents will pursue actions that we not only want to disincentivize, but actively want to punish. In RL, such simulated settings broadly aim to model real-world scenarios with high-risk and consequences. Agents, in their pursuit of ever-higher returns, must take into account both the rewards they accrue from pursuing the goal and the costs they incur from the path to the goal they pursue. Treating rewards and costs separately allows the world-designer more degrees of freedom to 
+
+
 
 \FOR{k= 0,1,2...}
-\STATE{Collect set of trajectories by running policy $\pi_k = \pi(\theta_k) $ in the environment.}
+\STATE{Collect set of trajectories by running policy $\pi*k = \pi(\theta_k) $ in the environment.}
 \STATE{Compute rewards-to-go $\hat{R}_t$ }
-\STATE{Compute advantage estimates, $\hat{A}_t$ (using any method) based on the current value function, $V_{\psi_k}$ }
+\STATE{Compute advantage estimates, $\hat{A}_t$ (using any method) based on the current value function, $V*{\psi*k}$ }
 \STATE{Update the policy by maximizing the PPO-penalty objective: 
-$$L^{KL-Penalty}(\theta) = \hat{\Aver{E}}_t[ \frac{\pi_{\theta}(a_t|s_t)}{\pi_{\theta old}(a_t|s_t)} \hat{\Aver{A}}_t - \beta KL[\pi_{\theta old}(.|s_t), \pi(.|s_t) ]]  $$ via stochastic gradient descent. }
-\STATE{Calculate penalized reward: $$R_{PEN} = R - \zeta Cost $$ }
-\STATE{Update Penalty Coefficient $\zeta$, $$\zeta_{k+1} = max(0, \zeta_k + \lambda_{\zeta}(Avg Cost - Cost_{lim} )$$ }
+$$L^{KL-Penalty}(\theta) = \hat{\Aver{E}}_t[ \frac{\pi*{\theta}(a*t|s_t)}{\pi*{\theta old}(a*t|s_t)} \hat{\Aver{A}}_t - \beta KL[\pi*{\theta old}(.|s*t), \pi(.|s_t) ]]  $$ via stochastic gradient descent. }
+\STATE{Calculate penalized reward: $$R*{PEN} = R - \zeta Cost $$ }
+\STATE{Update Penalty Coefficient $\zeta$, $$\zeta*{k+1} = max(0, \zeta_k + \lambda*{\zeta}(Avg Cost - Cost_{lim} )$$ }
 \STATE{Fit value function by regression with MSE loss, also via stochastic gradient descent.}
 \ENDFOR
 \
+
+
+
+![]()
