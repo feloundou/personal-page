@@ -62,7 +62,11 @@ $$L^{KLPenalty}(\theta) = \hat{\Aver{E}}*t[ \frac{\pi*{\theta}(a*t|s_t)}{\pi*{\t
 
 In some environments, agents will pursue actions that we not only want to disincentivize, but actively want to punish. In RL, such simulated settings broadly aim to model real-world scenarios with high-risk and consequences. Agents, in their pursuit of ever-higher returns, must take into account both the rewards they accrue from pursuing the goal and the costs they incur from the path to the goal they pursue. Treating rewards and costs separately allows the world-designer more degrees of freedom for shaping behavior. 
 
-The objective functions we have seen above for policy gradient methods allow for parametrizing a cost function in the objective function. However, I instead chose to set a parameter called a **cost limit**, which can be interpreted as a cost allowance we grant to the agent in the pursuit of its goal. The cost limit is agnostic, in that there could be different costs associated with different safety infractions, and the algorithm does not orient the agent towards one or the other, just tries to minimize the sum total of costs incurred.
+The objective functions we have seen above for policy gradient methods allow for parametrizing a cost function in the objective function. However, I instead chose to set a parameter called a **cost limit**, which can be interpreted as a cost allowance we grant to the agent in the pursuit of its goal. The cost limit is agnostic, in that there could be different costs associated with different safety infractions, and the algorithm does not orient the agent towards one or the other, just tries to minimize the sum total of costs incurred. The algorithm works as follows: 
+
+* Collect a set of trajectories by running policy $\pi_*k = \pi(\theta_k)$* in the environment.
+* Compute the rewards *$\hat{R}_k$*
+* Compute advantage estimates *$\hat{A}_t$ (I use [Generalized Advantage Estimation](https://arxiv.org/abs/1506.02438) but you can use any method),* based on the current value function *$V*{\psi_*k}$* 
 
 
 
