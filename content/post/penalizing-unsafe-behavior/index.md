@@ -44,7 +44,7 @@ large/catastrophic gradient steps. To stabilize these effects, Proximal Policy O
 
 The Clipped Surrogate Objective function is specified as:
 
-$$L^{CLIP}(\theta) = \hat{\mathop{\mathbb{E}}}_t\[ min(r_t(\theta) \hat{\Aver{A}}_t, clip(r_t(\theta), 1-\epsilon, 1+\epsilon)\hat{\Aver{A}}_t]$$
+$$L^{CLIP}(\theta) = \hat{\mathop{\mathbb{E}}}_t\[ min(r_t(\theta) \hat{\mathop{\mathbb{A}}}_t, clip(r_t(\theta), 1-\epsilon, 1+\epsilon)\hat{\mathop{\mathbb{A}}}_t]$$
 
 The clipping parameter, $\epsilon$ is chosen to bound the $r_t$ value. For instance, if $\epsilon$ is 0.2, then $r_t$ can vary between 0.8 and 1.2.
 
@@ -54,7 +54,7 @@ This variant is the more popular variance of the two, as it does not explicitly 
 
 The other variant of PPO penalizes large changes in the policy via a penalty parameter for the KL divergence between the two policies. This penalty coefficient adapts over the course of training to achieve some target value of divergence. The target divergence used is another hyperparameter to be tuned.
 
-$$L^{KLPenalty}(\theta) = \hat{\mathop{\mathbb{E}}}_t\[ \frac{\pi{\theta}(at|s_t)}{\pi{\theta_old}(at|s_t)} \hat{\mathop{\mathbb{A}}}\_t - \beta KL[\pi{\theta\_{old}}(.|s_t), \pi(.|s_t) ]]$$
+$$L^{KLPenalty}(\theta) = \hat{\mathop{\mathbb{E}}}_t\[ \frac{\pi{\theta}(a_t|s\_t)}{\pi\_{\theta_{old}}(a_t|s_t)} \hat{\mathop{\mathbb{A}}}\_t - \beta KL[\pi\_{\theta_{old}}(.|s_t), \pi(.|s_t) ]]$$
 
 
 
