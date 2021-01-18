@@ -54,7 +54,7 @@ This variant is the more popular variance of the two, as it does not explicitly 
 
 The other variant of PPO penalizes large changes in the policy via a penalty parameter for the KL divergence between the two policies. This penalty coefficient adapts over the course of training to achieve some target value of divergence. The target divergence used is another hyperparameter to be tuned.
 
-$$L^{KLPenalty}(\theta) = \hat{\Exp{E}}t\[ \frac{\pi{\theta}(at|s_t)}{\pi{\theta_old}(at|s_t)} \hat{\mathop{\mathbb{A}}}_t - \beta KL[\pi{\theta_old}(.|s_t), \pi(.|s_t) ]]$$
+$$L^{KLPenalty}(\theta) = \hat{\mathop{\mathbb{E}}}_t\[ \frac{\pi{\theta}(at|s_t)}{\pi{\theta_old}(at|s_t)} \hat{\mathop{\mathbb{A}}}_t - \beta KL[\pi{\theta_old}(.|s_t), \pi(.|s_t) ]]$$
 
 
 
