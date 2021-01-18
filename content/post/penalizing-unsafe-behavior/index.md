@@ -14,9 +14,9 @@ Policy Gradient methods are premised on the idea that a **policy that selects ac
 
 For vanilla policy gradients (such REINFORCE), the objective used to optimize the neural network looks like:
 
-$$L^{PG}(\theta) = \hat{\mathop{\mathbb{E}}}_t\[log \pi{\theta}(a_t|s_t) \hat{\Aver{A}}_t]$$
+$$L^{PG}(\theta) = \hat{\mathop{\mathbb{E}}}_t\[log \pi{\theta}(a_t|s_t) \hat{\mathop{\mathbb{A}}}_t]$$
 
-where the $\hat{\Aver{A}}$ could be the discounted return (as in
+where the $\hat{\mathop{\mathbb{A}}}$ could be the discounted return (as in
 REINFORCE) or the advantage function (as in GAE) for example. Taking a
 gradient ascent step on this loss with respect to the network parameters
 incentivizes our agent to pursue actions that led to higher reward.\
@@ -27,7 +27,7 @@ for instance a function that uses the probability of the action under
 the current policy $(\pi(a|s))$, divided by the probability of the
 action under your previous policy $(\pi_{old}(a|s))$, looking like:
 
-$$rt(\theta) = \frac{\pi{\theta}(at|s_t)}{\pi{\theta_old}(a_t|s_t)}$$
+$$rt(\theta) = \frac{\pi{\theta}(at|s\_t)}{\pi{\theta\_{old}}(a_t|s_t)}$$
 
 This expression is greater than 1 when when $a_t$ is more probable for
 the current policy than it is for the old policy; it will be between 0
