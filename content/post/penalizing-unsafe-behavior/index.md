@@ -27,7 +27,9 @@ for instance a function that uses the probability of the action under
 the current policy $(\pi(a|s))$, divided by the probability of the
 action under your previous policy $(\pi_{old}(a|s))$, looking like:
 
-$$r*t(\theta) = \frac{\pi*{\theta}(a*t|s_t)}{\pi*{\theta old}(a_t|s_t)}$$
+
+
+$$r*t(\theta) = \frac{\pi*{\theta}(a*t|s_t)}{\pi*{\theta_old}(a_t|s_t)}$$
 
 This expression is greater than 1 when when $a_t$ is more probable for
 the current policy than it is for the old policy; it will be between 0
@@ -52,13 +54,15 @@ This variant is the more popular variance of the two, as it does not explicitly 
 
 ## PPO-Penalty
 
-The other variant of PPO penalizes large changes in the policy via a penalty parameter for the KL divergence between the two policies. This penalty coefficient adapts over the course of training to achieve some target value of divergence. The target divergence is another hyperparameter to be tuned.
+The other variant of PPO penalizes large changes in the policy via a penalty parameter for the KL divergence between the two policies. This penalty coefficient adapts over the course of training to achieve some target value of divergence. The target divergence used is another hyperparameter to be tuned.
 
-$$L^{KL-Penalty}(\theta) = \hat{\Aver{E}}*t[ \frac{\pi*{\theta}(a*t|s_t)}{\pi*{\theta old}(a*t|s_t)} \hat{\Aver{A}}_t - \beta KL[\pi*{\theta old}(.|s_t), \pi(.|s_t) ]]$$
+$$L^{KLPenalty}(\theta) = \hat{\Aver{E}}*t[ \frac{\pi*{\theta}(a*t|s_t)}{\pi*{\theta_old}(a*t|s_t)} \hat{\Aver{A}}_t - \beta KL[\pi*{\theta_old}(.|s_t), \pi(.|s_t) ]]$$
 
 ## **Costs**
 
-In some environments, agents will pursue actions that we not only want to disincentivize, but actively want to punish. In RL, such simulated settings broadly aim to model real-world scenarios with high-risk and consequences. Agents, in their pursuit of ever-higher returns, must take into account both the rewards they accrue from pursuing the goal and the costs they incur from the path to the goal they pursue. Treating rewards and costs separately allows the world-designer more degrees of freedom to 
+In some environments, agents will pursue actions that we not only want to disincentivize, but actively want to punish. In RL, such simulated settings broadly aim to model real-world scenarios with high-risk and consequences. Agents, in their pursuit of ever-higher returns, must take into account both the rewards they accrue from pursuing the goal and the costs they incur from the path to the goal they pursue. Treating rewards and costs separately allows the world-designer more degrees of freedom for shaping behavior. 
+
+The objective functions we have seen above for policy gradient methods allow for parametrizing a cost function in the objective function. However, I instead chose to set a parameter called a **cost limit**, which 
 
 
 
