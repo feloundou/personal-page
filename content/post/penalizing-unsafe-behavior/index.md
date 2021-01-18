@@ -56,7 +56,9 @@ This variant is the more popular variance of the two, as it does not explicitly 
 
 The other variant of PPO penalizes large changes in the policy via a penalty parameter for the KL divergence between the two policies. This penalty coefficient adapts over the course of training to achieve some target value of divergence. The target divergence used is another hyperparameter to be tuned.
 
-$$L^{KLPenalty}(\theta) = \hat{\Aver{E}}*t[ \frac{\pi*{\theta}(a*t|s_t)}{\pi*{\theta_old}(a*t|s_t)} \hat{\Aver{A}}_t - \beta KL[\pi*{\theta_old}(.|s_t), \pi(.|s_t) ]]$$
+$$L^{KLPenalty}(\theta) = \hat{\Aver{E}}t\[ \frac{\pi{\theta}(at|s_t)}{\pi{\theta_old}(at|s_t)} \hat{\Aver{A}}_t - \beta KL[\pi{\theta_old}(.|s_t), \pi(.|s_t) ]]$$
+
+
 
 ## **Costs**
 
@@ -66,7 +68,9 @@ The objective functions we have seen above for policy gradient methods allow for
 
 * Collect a set of trajectories by running policy $\pi_*k = \pi(\theta_k)$* in the environment.
 * Compute the rewards *$\hat{R}_k$*
-* Compute advantage estimates *$\hat{A}_t$ (I use [Generalized Advantage Estimation](https://arxiv.org/abs/1506.02438) but you can use any method),* based on the current value function *$V*{\psi_*k}$* 
+* Compute advantage estimates *$\hat{A}_t$ (I use [Generalized Advantage Estimation](https://arxiv.org/abs/1506.02438) but you can use any method),* based on the current value function *$V*{\psi_*k}$*
+* Update the policy by maximizing the PPO Clip objective (or PPO-Penalty, or both)
+* Calculate penalized reward: *$$R^*{PEN} = R - \zeta Cost $$
 
 
 
