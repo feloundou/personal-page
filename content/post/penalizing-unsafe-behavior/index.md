@@ -56,7 +56,7 @@ This variant is the more popular variance of the two, as it does not explicitly 
 
 The other variant of PPO penalizes large changes in the policy via a penalty parameter for the KL divergence between the two policies. This penalty coefficient adapts over the course of training to achieve some target value of divergence. The target divergence used is another hyperparameter to be tuned.
 
-$$L^{KLPenalty}(\theta) = \hat{\Exp{E}}t\[ \frac{\pi{\theta}(at|s_t)}{\pi{\theta_old}(at|s_t)} \hat{\Aver{A}}_t - \beta KL[\pi{\theta_old}(.|s_t), \pi(.|s_t) ]]$$
+$$L^{KLPenalty}(\theta) = \hat{\Exp{E}}t\[ \frac{\pi{\theta}(at|s_t)}{\pi{\theta_old}(at|s_t)} \hat{\mathop{\mathbb{A}}}_t - \beta KL[\pi{\theta_old}(.|s_t), \pi(.|s_t) ]]$$
 
 
 
@@ -76,18 +76,8 @@ The objective functions we have seen above for policy gradient methods allow for
 
 
 
-\FOR{k= 0,1,2...}
-\STATE{Collect set of trajectories by running policy $\pi*k = \pi(\theta_k) $ in the environment.}
-\STATE{Compute rewards-to-go $\hat{R}_t$ }
-\STATE{Compute advantage estimates, $\hat{A}_t$ (using any method) based on the current value function, $V*{\psi*k}$ }
-\STATE{Update the policy by maximizing the PPO-penalty objective: 
-$$L^{KL-Penalty}(\theta) = \hat{\Aver{E}}_t[ \frac{\pi*{\theta}(a*t|s_t)}{\pi*{\theta old}(a*t|s_t)} \hat{\Aver{A}}_t - \beta KL[\pi*{\theta old}(.|s*t), \pi(.|s_t) ]]  $$ via stochastic gradient descent. }
-\STATE{Calculate penalized reward: $$R*{PEN} = R - \zeta Cost $$ }
-\STATE{Update Penalty Coefficient $\zeta$, $$\zeta*{k+1} = max(0, \zeta_k + \lambda*{\zeta}(Avg Cost - Cost_{lim} )$$ }
-\STATE{Fit value function by regression with MSE loss, also via stochastic gradient descent.}
-\ENDFOR
-\
+Here is an example of two agents trained in OpenAI Safety Gym's Point-Goal v1 environment. From the setup specified above, agents learn to limit their costs near the chosen hyperparameter. Are you able to guess which are the two cost limits I used in the experiments below? *You may hover over the image for the answer.*
 
 
 
-![]()
+![The answers are 0 (yellow) and 25 (purple).](runs_costlim_25_0.png "Agents trained at different cost limits")
