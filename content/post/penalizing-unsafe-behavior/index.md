@@ -66,11 +66,11 @@ In some environments, agents will pursue actions that we not only want to disinc
 
 The objective functions we have seen above for policy gradient methods allow for parametrizing a cost function in the objective function. However, I instead chose to set a parameter called a **cost limit**, which can be interpreted as a cost allowance we grant to the agent in the pursuit of its goal. The cost limit is agnostic, in that there could be different costs associated with different safety infractions, and the algorithm does not orient the agent towards one or the other, just tries to minimize the sum total of costs incurred. The algorithm works as follows: 
 
-* Collect a set of trajectories by running policy $\pi_*k = \pi(\theta_k)$* in the environment.
-* Compute the rewards *$\hat{R}_k$*
-* Compute advantage estimates *$\hat{A}_t$ (I use [Generalized Advantage Estimation](https://arxiv.org/abs/1506.02438) but you can use any method),* based on the current value function *$V*{\psi_*k}$*
+* Collect a set of trajectories by running policy $\pi_k = \pi(\theta_k)$ in the environment.
+* Compute the rewards $\hat{R}_k$
+* Compute advantage estimates $\hat{A}_t$ *(I use [Generalized Advantage Estimation](https://arxiv.org/abs/1506.02438) but you can use any method),* based on the current value function $V{\psi_k}$
 * Update the policy by maximizing the PPO Clip objective (or PPO-Penalty, or both)
-* Calculate penalized reward: *$$R^*{PEN} = R - \zeta Cost $$ given penalty coefficient $\zeta$
+* Calculate penalized reward: $$R^{PEN} = R - \zeta Cost $$ given penalty coefficient $\zeta$
 * Update  Penalty Coefficient $\zeta$, $$\zeta{k+1} = max(0, \zeta\_k + \lambda{\zeta}(Avg Cost - Cost\_{lim} )$$
 * Fit the value function by regression with MSE loss, via stochastic gradient descent.
 
@@ -80,4 +80,4 @@ Here is an example of two agents trained in OpenAI Safety Gym's Point-Goal v1 en
 
 
 
-![The answers are 0 (yellow) and 25 (purple).](runs_costlim_25_0.png "Agents trained at different cost limits")
+![](runs_costlim_25_0.png "The answers are 0 (yellow) and 25 (purple).")
