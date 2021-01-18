@@ -19,7 +19,9 @@ $$L^{PG}(\theta) = \hat{\mathop{\mathbb{E}}}_t\[log \pi{\theta}(a_t|s_t) \hat{\m
 where the $\hat{\mathop{\mathbb{A}}}$ could be the discounted return (as in
 REINFORCE) or the advantage function (as in GAE) for example. Taking a
 gradient ascent step on this loss with respect to the network parameters
-incentivizes our agent to pursue actions that led to higher reward.\
+incentivizes our agent to pursue actions that led to higher reward.
+
+\
 The vanilla policy gradient method uses the log probability of your
 action $(log \pi(a|s))$ to trace the impact of the actions (i.e. credit
 assignment), but you could imagine using another function to do this,
