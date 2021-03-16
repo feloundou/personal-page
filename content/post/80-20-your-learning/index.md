@@ -1,5 +1,5 @@
 ---
-title: 80:20 Your Learning
+title: 80:20 Learning
 date: 2020-11-06T02:34:56.265Z
 draft: false
 featured: false
