@@ -36,6 +36,10 @@ Our clustering algorithm here is a VQ-VAE inspired by Oord et al (2017) with a s
 
 
 
+$$L^{PG}(\theta) = \hat{\mathop{\mathbb{E}}}_t\[log \pi{\theta}(a_t|s_t) \hat{\mathop{\mathbb{A}}}_t]$$
+
+
+
 **B. The Policy Network**
 
 Now that we have received cluster labels from the VQ-VAE, we concatenate them with the state and pass them through a Gaussian MLP. From the Gaussian’s Normal Distribution, then, we evaluate the probability of the actions taken by the “expert”, given the state and cluster labels we have assigned. What happens here is that we increase the probabilities of the true action under the conditional normal distribution. What does the training objective look like? I will flash the formula quickly then proceed to explain the highlights.
