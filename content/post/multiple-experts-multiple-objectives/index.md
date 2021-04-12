@@ -10,21 +10,33 @@ image:
 ---
 At long last, I present my Scholars project, where I engineered a (somewhat primitive) framework that disentangles data containing many behaviors from different experts to learn to steer a model towards one mode of behavior or another.
 
-##### Motivation
+#### Motivation
 
 The internet is chock full of data that many machine learning models leverage for training. These data, however, are produced by people, entities or organizations that have their own utility functions. These data, can therefore be thought of as being conditional on those utility functions. When our models ingest this large chunk of data wholesale, they tend to assimilate and reproduce behaviors mapping to these utility functions. As researchers and designers, we may want to retain the ability to steer our trained models towards or away from some modes of behavior. Furthermore, as our models grow in capability and are applied to increasingly complex and diverse settings, we may want to steer their behavior to align with the context or human preferences.
 
 
 
-##### Proposed Solution
+#### Proposed Solution
 
-To approach this problem, we start with a reinforcement learning framework, where policies can be engineered and back-tested. In an offline RL setting, we take a batch of data collected from multiple polices and try to learn from it mode-conditional policies. So in our ideal scenario, this single policy, conditional on the current state and a context vector would correspond exactly to the policy of some expert conditional only on the state.
+To approach this problem, we start with a reinforcement learning (RL) framework, where policies can be engineered, back-tested and visually inspected. In an offline RL setting, we take a batch of data collected from multiple polices and try to learn from it mode-conditional policies. So in our ideal scenario, this single policy, conditional on the current state and a context vector would correspond exactly to the policy of some expert conditional only on the state.
+
+
+
+**Training the Model**
 
 So what is the process for training the model? First, we collect examples, which is straightforward. We chose to work with examples rather than expert policies because examples of success are easier to come by in nature, especially if we think back to our motivation of Internet data. 
 
-Then we pass these examples through a VQ-VAE that will cluster them. Traditionally, These labels are passed to a generator, which in this context is a Gaussian actor, that will recover a probability distribution based on the current state and proposed cluster label. Let’s take a closer look at the architecture.
+Then we pass these examples through a Vector-Quantized Variational Autoencoder (VQ-VAE) that will cluster them. These labels are passed to a generator, which in this context is a Gaussian actor, that will recover a probability distribution based on the current state and proposed cluster label. Let’s take a closer look at the architecture.
 
-Our clustering algorithm here is a VQ-VAE inspired by Oord et al (2017) with a small modification. The VQ-VAE, as usual has the objective of distilling its inputs to latent dimensions well enough that the decoder can reconstruct them. In the middle here is the embedding space, which maps the encoder representations to cluster via a simple argmin function, i.e. if a tensor is closest in euclidean distance to embedding tensor j, then map that sample to cluster j. Note that this means that the dimensionality of the embedding space determines the  maximum total number of clusters you allow the VQ-VAE to create. If you set k=n, then you can get UP TO n clusters. I want to note here that the labels are the most essential component here. Where a traditional VQ-VAE produces discrete labels, instead of the discrete labels, we simply take the distance vectors as they contain a richer signal while the model trains. These distances will become the instructions that we send to the generator to tell it how we want it to behave. On to the next slide.
+
+
+**A. The Clustering Network**
+
+Our clustering algorithm here is a VQ-VAE inspired by Oord et al (2017) with a small modification. The VQ-VAE, as usual has the objective of distilling its inputs to latent dimensions well enough that the decoder can reconstruct them. In the middle here is the embedding space, which maps the encoder representations to cluster via a simple argmin function, i.e. if a tensor is closest in euclidean distance to embedding tensor j, then map that sample to cluster j. Note that this means that the dimensionality of the embedding space determines the  maximum total number of clusters you allow the VQ-VAE to create. If you set k=n, then you can get UP TO n clusters. I want to note here that the labels are the most essential component here. Where a traditional VQ-VAE produces discrete labels, instead of the discrete labels, we simply take the distance vectors as they contain a richer signal while the model trains. These distances will become the instructions that we send to the generator to tell it how we want it to behave.
+
+
+
+**B. The Policy Network**
 
 Now that we have received cluster labels from the VQ-VAE, we concatenate them with the state and pass them through a Gaussian MLP. From the Gaussian’s Normal Distribution, then, we evaluate the probability of the actions taken by the “expert”, given the state and cluster labels we have assigned. What happens here is that we increase the probabilities of the true action under the conditional normal distribution. What does the training objective look like? I will flash the formula quickly then proceed to explain the highlights.
 
