@@ -2,7 +2,7 @@
 title: Multiple Experts, Multiple Objectives
 date: 2021-04-12T21:31:58.843Z
 draft: false
-featured: false
+featured: true
 image:
   filename: featured
   focal_point: Smart
@@ -32,7 +32,11 @@ Then we pass these examples through a Vector-Quantized Variational Autoencoder (
 
 **A. The Clustering Network**
 
-Our clustering algorithm here is a VQ-VAE inspired by Oord et al (2017) with a small modification. The VQ-VAE, as usual has the objective of distilling its inputs to latent dimensions well enough that the decoder can reconstruct them. In the middle here is the embedding space, which maps the encoder representations to cluster via a simple argmin function, i.e. if a tensor is closest in euclidean distance to embedding tensor j, then map that sample to cluster j. Note that this means that the dimensionality of the embedding space determines the  maximum total number of clusters you allow the VQ-VAE to create. If you set k=n, then you can get **up to** n clusters. I want to note here that the labels are the most essential component here. Where a traditional VQ-VAE produces discrete labels, instead of the discrete labels, we simply take the distance vectors as they contain a richer signal while the model trains. These distances will become the instructions that we send to the generator to tell it how we want it to behave.
+Our clustering algorithm here is a VQ-VAE inspired by Oord et al (2017) with a small modification. The VQ-VAE, as usual has the objective of distilling its inputs to latent dimensions well enough that the decoder can reconstruct them. In the middle here is the embedding space, which maps the encoder representations to cluster via a simple argmin function, i.e. if a tensor is closest in euclidean distance to embedding tensor j, then map that sample to cluster j. 
+
+
+
+Note that this means that the dimensionality of the embedding space determines the  maximum total number of clusters you allow the VQ-VAE to create. If you set k=n, then you can get **up to** n clusters. I want to note here that the labels are the most essential component here. Where a traditional VQ-VAE produces discrete labels, instead of the discrete labels, we simply take the distance vectors as they contain a richer signal while the model trains. These distances will become the instructions that we send to the generator to tell it how we want it to behave.
 
 
 
@@ -62,7 +66,41 @@ To refresh your memory, here is what these experts look like in this setting. In
 
 We set k to 4 for this particular experiment, and this what behavior corresponds to the 4 clusters. The model is sort of learning to go forward. It tends to be true across experiments that it will pick up the simplest behavior first, before learning more complex ones.
 
-This is the model after 1000 epochs of training. It learns to sweep in wide circles.
+![](epoch1_mode1.png "Epoch 1: Mode 1")
+
+
+
+![Epoch 1: Mode 2](epoch1_mode2.png "Epoch 1: Mode 2")
+
+
+
+![](epoch1_mode3.png "Epoch 1: Mode 3")
+
+
+
+![](epoch1_mode4.png "Epoch 1: Mode 4")
+
+
+
+This is the model after 5000 epochs, where it has learned some mode-conditional behavior, with some caveats.
+
+![](epoch5000_mode1.png "Epoch 5000: Mode 1")
+
+
+
+![](epoch5000_mode2.png "Epochs 5000: Mode 2")
+
+
+
+![](epoch5000_mode3.png "Epochs 5000: Mode 3")
+
+
+
+![](epoch5000_mode4.png "Epochs 5000: Mode 4")
+
+
+
+
 
 Here, we show that our model learns some of the goal seeking behavior in Mode 2, and in Mode 3 continues to learn to go forward. It seems like Mode 1 and Mode 4 do not map clearly to a distinct behavior, or are averages of the two.
 
