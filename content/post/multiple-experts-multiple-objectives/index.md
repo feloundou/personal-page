@@ -91,7 +91,9 @@ Now that we have received cluster labels from the VQ-VAE, we concatenate them wi
 
 **Test Time**
 
-Let's put the above components together. The model observes a state, concatenates a context vector supplied by the supervisor (currently me) and then produces a conditional policy and draws an action. As discussed above, a model learns to associate small distances at the index with the 
+Let's put the above components together. The model observes a state, concatenates a context vector supplied by the supervisor (currently me) and then produces a conditional policy and draws an action. As discussed above, a model learns that small distances at an index are indexing that particular mode. So, to replicate this mode of behavior, we use **naught-hot vectors**, which can be represented as:
+
+$$\[b, 0, b, b, b]$$, where b is an arbitrary integer. In this example, we would be indexing mode 1, in a model with up to 5 learned modes. We do some evaluations around what b should be depending on the path that the maximum distance follows during training, but for our current demonstrations, we simply set **b=1**.
 
 
 
