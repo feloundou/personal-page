@@ -48,7 +48,7 @@ In our approach, we sought to design a method to classify examples from multiple
 
 Let D represent the dimensionality (number of) experts, z represent some latent context, s represent the current state, and s' represent the next state. The training objective can be represented as: 
 
-$$ \max_{\pi{\theta}, D} $$
+$$ \max\_{\pi\_{\theta}, D} \mathbb{E\_{c \sim G}} \mathbb{E\_{s,a,s' \sim \pi{\theta},z $$
 
 $$ max{\pi{\theta}, D} \mathbb{E\_{c \sim G}}{\mathbb{E\_{s,a,s' \sim \pi{\theta},z}{\log P\_D (z|s'-s)}} = max{\pi{\theta}, D}\mathbb{E\_{c\sim G}}{\mathbb{E_{s,a,s' \sim \mathcal{D}}}{\pi{\theta}(a|s,z) \log P_D(z|s'-s)}} $$
 
@@ -167,25 +167,27 @@ After 5000 epochs, some distinguishable differences emerge between the modes of 
 
 ![](epoch5000_mode3.png "Epochs 5000: Mode 3")
 
-
-
 *Epoch 5000: Mode 4*
 
 ![](epoch5000_mode4.png "Epochs 5000: Mode 4")
 
 
 
-Here, we show that our model learns some of the goal seeking behavior in Mode 2, and in Mode 3 continues to learn to go forward. It seems like Mode 1 and Mode 4 do not map clearly to a distinct behavior, or are averages of the two.
+It appears that our model learns some of the goal seeking behavior in Mode 2, and in Mode 3 continues to learn to go forward. It seems like Mode 1 and Mode 4 do not map clearly to a distinct behavior, or are averages of the two.
+
+**Desiderata**
+
+Anyone who has trained VAEs understands they can be famously fickle. I would lik
+
+
 
 **Future Directions**
 
 As I continue to explore this methodology, I would like to eventually reach a point where the findings are predictable (qualitatively and quantitatively for each mode-conditional policy) and generalizable. Moreover, I would be interested Of course, one of the crucial lessons we learned over the course of the project is that the path context matters in disentangling and subsequently guiding behavior. In future work, I would like to explore these dependencies in greater depth by incorporating context-aware mechanisms such as **attention** in its various forms. I would also like to experiment with different modalities like language, and make discovered latent contexts interpretable for settings where the expert policies cannot be engineered/observed directly.
 
-**Final Thoughts**
-
-Now that the program has drawn to a close, it is difficult to close 
 
 
+**Acknowledgements**
 
 **References**
 
