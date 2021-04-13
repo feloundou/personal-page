@@ -40,15 +40,15 @@ To approach this problem, we start with a reinforcement learning (RL) framework,
 
 $$\pi(a| s, z\_1) = \pi\_{expert_1}(a|s) $$.
 
-Arbitrarily, therefore, the formulation would be:
+Arbitrarily, therefore, the formulation for the Nth expert would be:
 
-* >
+$$\pi(a| s, z\_n) = \pi\_{expert_n}(a|s) $$.
 
 In our approach, we sought to design a method to classify examples from multiple experts, then learn conditional policies. There are therefore two major elements to the model: a **classifier** and a **generator**. The **classifier** we use is a VQ-VAE-style encoder that takes as input state-transition data (or state-action pairs) and output some proposed discrete categorical labels. The **generator** is a Gaussian actor that takes as input the proposed deterministic latent context labels, and current state and evaluates the log probability of the given expert's action given those probabilities.
 
 Let D represent the dimensionality (number of) experts, z represent some latent context, s represent the current state, and s' represent the next state. The training objective can be represented as: 
 
-$$ \max{\pi{\theta}, D} $$
+$$ \max_{\pi{\theta}, D} $$
 
 $$ max{\pi{\theta}, D} \mathbb{E\_{c \sim G}}{\mathbb{E\_{s,a,s' \sim \pi{\theta},z}{\log P\_D (z|s'-s)}} = max{\pi{\theta}, D}\mathbb{E\_{c\sim G}}{\mathbb{E_{s,a,s' \sim \mathcal{D}}}{\pi{\theta}(a|s,z) \log P_D(z|s'-s)}} $$
 
@@ -114,6 +114,10 @@ For the purpose of this demonstration, let us take a look at 2 experts. One who 
 
 
 ![](goal_seeker.png "Goal-Seeking Agent")
+
+
+
+The forward-moving agent is:
 
 ![](forward_expert.png "Forward Agent")
 
@@ -185,8 +189,10 @@ Now that the program has drawn to a close, it is difficult to close
 
 **References**
 
-1. [](https://www.semanticscholar.org/paper/695a2c95eacdbccb7a73d2f1e90e7b35b4b3d864)Neural Discrete Representation Learning, NeurIPS 2017, Aaron van den Oord, Oriol Vinyals, koray kavukcuoglu.
+1. [](https://www.semanticscholar.org/paper/695a2c95eacdbccb7a73d2f1e90e7b35b4b3d864)Aaron van den Oord, Oriol Vinyals, Koray Kavukcuoglu: “Neural Discrete Representation Learning”, 2017; [arXiv:1711.00937](http://arxiv.org/abs/1711.00937).
 
-2. 
+2. Abbas Abdolmaleki, Sandy H. Huang, Leonard Hasenclever, Michael Neunert, H. Francis Song, Martina Zambelli, Murilo F. Martins, Nicolas Heess, Raia Hadsell, Martin Riedmiller: “A Distributional View on Multi-Objective Policy Optimization”, 2020; [arXiv:2005.07513](http://arxiv.org/abs/2005.07513).
+
+3. 
 
 **GitHub:**
