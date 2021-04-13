@@ -205,14 +205,12 @@ Anyone who has trained VAEs understands they can be famously fickle. Throughout 
 
 **Acknowledgements**
 
-None of this would have been possible without the continual support of the OpenAI organization as a whole, which launched the Scholars 
+None of this would have been possible without the continual support of the OpenAI organization as a whole, which launched the Scholars program. In particular, I would like to highlight my mentor, Dr. Joshua Achiam, as one of the principal driving forces behind my continued progress in this project. Muraya Maigua and Christina Hendricks, managers of the program were excellent stewards of this initiative. Finally, my fellow Scholars were a great source of feedback and additional resources.
 
 **References**
 
 1. [](https://www.semanticscholar.org/paper/695a2c95eacdbccb7a73d2f1e90e7b35b4b3d864)Aaron van den Oord, Oriol Vinyals, Koray Kavukcuoglu: “Neural Discrete Representation Learning”, 2017; [arXiv:1711.00937](http://arxiv.org/abs/1711.00937).
 
 2. Abbas Abdolmaleki, Sandy H. Huang, Leonard Hasenclever, Michael Neunert, H. Francis Song, Martina Zambelli, Murilo F. Martins, Nicolas Heess, Raia Hadsell, Martin Riedmiller: “A Distributional View on Multi-Objective Policy Optimization”, 2020; [arXiv:2005.07513](http://arxiv.org/abs/2005.07513).
-
-3. 
 
 **GitHub:**
