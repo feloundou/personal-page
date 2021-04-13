@@ -91,7 +91,9 @@ Now that we have received cluster labels from the VQ-VAE, we concatenate them wi
 
 **Test Time**
 
-Let's put the above components together. The model observes a state, concatenates a context vector supplied by the supervisor (currently me) and then produces a conditional policy and draws an action. Let’s look at some demos.
+Let's put the above components together. The model observes a state, concatenates a context vector supplied by the supervisor (currently me) and then produces a conditional policy and draws an action. As discussed above, a model learns to associate small distances at the index with the 
+
+
 
 
 
