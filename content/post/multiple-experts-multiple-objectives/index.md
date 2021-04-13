@@ -24,17 +24,9 @@ In our approach, we sought to design a method to classify examples from multiple
 
 Let D represent the dimensionality (number of) experts, z represent some latent context, s represent the current state, and s' represent the next state. The training objective is therefore: 
 
-$$  \max{\pi{\theta}, D} \underE{c\sim G}{\underE{s,a,s' \sim \pi{\theta},z}{\log P_D (z|s'-s)}} = \max{\pi{\theta}, D} \underE{c\sim G}{\underE{s,a,s' \sim \mathcal{D}}{\pi{\theta}(a|s,z) \log P_D (z|s'-s)}} $$
-
-$$ \max{\pi{\theta}, D} \mathbb{E\_{c \sim G}}{\mathbb{E\_{s,a,s' \sim \pi{\theta},z}{\log P\_D (z|s'-s)}} = \max{\pi{\theta}, D}\mathbb{E\_{c\sim G}}{\mathbb{E_{s,a,s' \sim \mathcal{D}}}{\pi{\theta}(a|s,z) \log P_D (z|s'-s)}} $$
-
-
-
-$$ L^{PG}(\theta) = \hat{\mathop{\mathbb{E}}}_t\[log \pi{\theta}(a_t|s_t) \hat{\mathop{\mathbb{A}}}_t] $$
+$$ \max{\pi{\theta}, D} \mathbb{E\_{c \sim G}}{\mathbb{E\_{s,a,s' \sim \pi{\theta},z}{\log P\_D (z|s'-s)}} = \max{\pi{\theta}, D}\mathbb{E\_{c\sim G}}{\mathbb{E_{s,a,s' \sim \mathcal{D}}}{\pi{\theta}(a|s,z) \log P_D(z|s'-s)}} $$
 
 The two terms above are optimized by two networks: (i) a VQ-VAE style network, and (ii) a Gaussian actor.
-
-
 
 **Training the Model**
 
@@ -61,7 +53,15 @@ Now that we have received cluster labels from the VQ-VAE, we concatenate them wi
 
 This is what happens at inference time. The model observes a state, concatenates a context vector supplied by the supervisor (currently me) and then produces a conditional policy and draws an action. Let’s look at some demos.
 
-Here is the training objective. For those who recognize it, the numerator is the VQ-VAE objective, and the denominator is the policy loss.
+
+
+**The Training Objective**
+
+Based on the network objectives above, it should be fairly straightforward to deduce the analytic form for the training objective. Here is the formula we use:
+
+$$L = \frac{ \log p(\delta s|z_q (\delta s)) + ||sg\[(z_e(\delta s)] - e||^2_2 + \beta||z_e(\delta s) - sg\[e]||^2_2}{\log p(a | s, z)}$$
+
+Because the two (or three if you count the encoder and decoder as separate) networks train concurrently, we want to make sure incentives are well-aligned. Simply, the numerator is the VQ-VAE objective, and the denominator is the policy loss.
 
 The first term of the numerator is a reconstruction loss to encourage the encoder and decoder to communicate effectively through good latent representations. Then there is an L2 loss from the encoder output that incentives the encoder to make representations that are close to the embeddings. There is also an L2 loss from the decoder output that incentives the embeddings to stay close to the encoder representations. Lastly, the denominator is the policy loss which makes the actions more likely when the clustering algorithm is more confident about the context. All these moving parts are trained simultaneously.
 
@@ -71,7 +71,7 @@ The first term of the numerator is a reconstruction loss to encourage the encode
 
 The setting we chose for experimentation is Safety Gym. 
 
-![]()
+![](experiment_setup.gif)
 
 
 
