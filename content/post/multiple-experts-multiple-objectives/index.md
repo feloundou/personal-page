@@ -22,6 +22,18 @@ To approach this problem, we start with a reinforcement learning (RL) framework,
 
 
 
+In our approach, we sought to design a method to classify examples from multiple experts, then learn conditional policies. There are therefore two major elements to the model: a \textbf{classifier} and a \textbf{generator}. The \textbf{classifier} we use is a VQ-VAE-style encoder that takes as input state-transition data (or state-action pairs) and output some proposed discrete categorical labels. The \textbf{generator} is a Gaussian actor that takes as input the proposed deterministic latent context labels, and current state and evaluates the log probability of the given expert's action given those probabilities.
+
+Let D represent the dimensionality (number of) experts, z represent some latent context, s represent the current state, and s' represent the next state. The training objective is therefore: 
+
+$$begin{align}
+    \max{\pi{\theta}, D} \underE{c\sim G}{\underE{s,a,s' \sim \pi{\theta},z}{\log P_D (z|s'-s)}} &= \max{\pi{\theta}, D} \underE{c\sim G}{\underE{s,a,s' \sim \mathcal{D}}{\pi{\theta}(a|s,z) \log P_D (z|s'-s)}} 
+\end{align}$$
+
+The two terms above are optimized by two networks: (i) a VQ-VAE style network, and (ii) a Gaussian actor.
+
+
+
 **Training the Model**
 
 So what is the process for training the model? First, we collect examples, which is straightforward. We chose to work with examples rather than expert policies because examples of success are easier to come by in nature, especially if we think back to our motivation of Internet data. 
@@ -32,15 +44,19 @@ Then we pass these examples through a Vector-Quantized Variational Autoencoder (
 
 **A. The Clustering Network**
 
-Our clustering algorithm here is a VQ-VAE inspired by Oord et al (2017) with a small modification. The VQ-VAE, as usual has the objective of distilling its inputs to latent dimensions well enough that the decoder can reconstruct them. In the middle here is the embedding space, which maps the encoder representations to cluster via a simple argmin function, i.e. if a tensor is closest in euclidean distance to embedding tensor j, then map that sample to cluster j. 
+Our clustering algorithm here is a VQ-VAE inspired by Oord et al (2017) with a small modification. The VQ-VAE, as usual has the objective of distilling its inputs to latent dimensions well enough that the decoder can reconstruct them. In the middle here is the embedding space, which maps the encoder representations to cluster via a simple argmin function, i.e. if a tensor is closest in euclidean distance to embedding tensor j, then map that sample to cluster j. Its training objective is: 
+
+
+   $$ L = \log p(x|z_q (x)) + ||sg\[(z_e(x)] - e||^2_2 + \beta||z_e(x) - sg\[e]||^2_2 $$,
+
+where sg represents a non-differentiable operator. The first term, $$ -log( p(x|z_q) )
+$$ is \textbf{reconstruction loss} and measures how well the network is able to regenerate the network's input, given the latent context. The second term, $$‖ sg\[z_e(x)]− e ‖^2$$ is the \textbf{codebook loss}, which moves the embedding vectors closer to the encoder output via an L2 loss (since they are not updated by gradient descent). The third term, $$ β‖ z_e(x)− sg\[e] ‖^2$$ \textbf{commitment loss} is included to make sure the encoder commits to an embedding. 
 
 
 
 Note that this means that the dimensionality of the embedding space determines the  maximum total number of clusters you allow the VQ-VAE to create. If you set k=n, then you can get **up to** n clusters. I want to note here that the labels are the most essential component here. Where a traditional VQ-VAE produces discrete labels, instead of the discrete labels, we simply take the distance vectors as they contain a richer signal while the model trains. These distances will become the instructions that we send to the generator to tell it how we want it to behave.
 
 
-
-$$L^{PG}(\theta) = \hat{\mathop{\mathbb{E}}}_t\[log \pi{\theta}(a_t|s_t) \hat{\mathop{\mathbb{A}}}_t]$$
 
 
 
@@ -100,19 +116,14 @@ This is the model after 5000 epochs, where it has learned some mode-conditional 
 
 
 
-
-
 Here, we show that our model learns some of the goal seeking behavior in Mode 2, and in Mode 3 continues to learn to go forward. It seems like Mode 1 and Mode 4 do not map clearly to a distinct behavior, or are averages of the two.
 
-**Next Steps:**
+**Future Directions**
 
-* Longer-term path dependencies (LSTM, attention)
-* Generalizable properties
-* Quantitative performance guarantees
-* Learn when/how to mode-switch from:
-* * human feedback
-  * other environmental feedback
-  * compare performance to other context-aware frameworks
-* Experiment with different modalities
-* * Language samples
-* Interpreting learned modes beyond demos
+As I continue to explore this methodology, I would like to eventually reach a point where the findings are predictable (qualitatively and quantitatively for each mode-conditional policy) and generalizable. Moreover, I would be interested Of course, one of the crucial lessons we learned over the course of the project is that the path context matters in disentangling and subsequently guiding behavior. In future work, I would like to explore these dependencies in greater depth by incorporating context-aware mechanisms such as **attention** in its various forms. I would also like to experiment with different modalities like language, and make discovered latent contexts interpretable for settings where the expert policies cannot be engineered/obseved directly.
+
+**Final Thoughts**
+
+Now that the program has drawn to a close, it is difficult to close 
+
+**GitHub:**
