@@ -48,7 +48,7 @@ In our approach, we sought to design a method to classify examples from multiple
 
 Let D represent the dimensionality (number of) experts, z represent some latent context, s represent the current state, and s' represent the next state. The training objective can be represented as: 
 
-$$ max{\pi{\theta}, D} $$
+$$ \max{\pi{\theta}, D} $$
 
 $$ max{\pi{\theta}, D} \mathbb{E\_{c \sim G}}{\mathbb{E\_{s,a,s' \sim \pi{\theta},z}{\log P\_D (z|s'-s)}} = max{\pi{\theta}, D}\mathbb{E\_{c\sim G}}{\mathbb{E_{s,a,s' \sim \mathcal{D}}}{\pi{\theta}(a|s,z) \log P_D(z|s'-s)}} $$
 
@@ -66,7 +66,7 @@ Our clustering algorithm here is a VQ-VAE inspired by [Oord et al (2017)](https:
 
 $$ L = \log p(x|z_q (x)) + ||sg\[(z_e(x)] - e||^2_2 + \beta||z_e(x) - sg\[e]||^2_2 $$,
 
-where sg represents a non-differentiable operator. The first term, $$ log( p(x|z_q) )
+where sg represents a non-differentiable operator. The first term, $$ \log( p(x|z_q) )
 $$ is **reconstruction loss** and measures how well the network is able to regenerate the network's input, given the latent context. The second term, $$ ‖sg\[z_e(x)]− e ‖^2$$ is the **codebook loss**, which moves the embedding vectors closer to the encoder output via an L2 loss (since they are not updated by gradient descent). The third term, $$ β‖ z_e(x)− sg\[e] ‖^2$$ **commitment loss** is included to make sure the encoder commits to an embedding. 
 
 Note that this means that the dimensionality of the embedding space determines the  maximum total number of clusters you allow the VQ-VAE to create. If you set k=n, then you can get **up to** n clusters. I want to note here that the labels are the most essential component here. Where a traditional VQ-VAE produces discrete labels, instead of the discrete labels, we simply take the distance vectors as they contain a richer signal while the model trains. These distances will become the instructions that we send to the generator to tell it how we want it to behave.
@@ -97,7 +97,7 @@ As discussed briefly above, The first term of the numerator is a reconstruction 
 
 The setting we chose for experimentation is Safety Gym. 
 
-![](experiment_setup.gif)
+![](experiment_setup.gif "Safety Gym")
 
 
 
@@ -123,9 +123,13 @@ Before we look at the demonstrations, I would like to point out 2 factors that s
 
 When we take larger steps to calculate the transitions, however, the model seems to learn to cluster much earlier. You can maybe think of this a case where one agent walks forward all the time and the other agent walks forward for 3 steps then turns. In the one step scenario, the model would have difficulty separating the two agents when they are walking straight for some of the time. A future direction therefore, might be to model long- and short-term dependencies, such as with LSTMs or with attention.
 
-To refresh your memory, here is what these experts look like in this setting. In these demonstrations that follow, everything is kept constant, except the context vector that we provide the mode-conditional agents.
+In the demonstrations that follow, I keep everything constant. This means that the environment is seeded, such that an expert reaching a goal will cause it to respawn in a place entirely determined by the seed. This serves as a unit test for our approach, as the only varying factor is the context vector we supply to the agent at test time.  
 
-We set k to 4 for this particular experiment, and this what behavior corresponds to the 4 clusters. The model is sort of learning to go forward. It tends to be true across experiments that it will pick up the simplest behavior first, before learning more complex ones.
+
+
+***Results***
+
+We set **k=4** for this particular experiment, meaning that we allow our model to learn up to 4 distinct behaviors from the data it consumes . Below, we step through and this what behavior corresponds to the 4 clusters. The model is sort of learning to go forward. It tends to be true across experiments that it will pick up the simplest behavior first, before learning more complex ones.
 
 *Epoch 1: Mode 1*
 
