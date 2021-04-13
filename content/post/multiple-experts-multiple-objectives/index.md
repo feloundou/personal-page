@@ -99,7 +99,7 @@ At inference time, therefore, we might have something like this:
 
 $$\[s^1 , s^2 , ... , s^O] + \[1, 0, 1, 1] \rightarrow \[a_f, a_r] $$,
 
-where $a_f$ and $a_r$ represent the forward and rotational velocities in this context, 
+where $a_f$ and $a_r$ represent the forward and rotational velocities in this context, and in a general context would simply be the generator output.
 
 
 
