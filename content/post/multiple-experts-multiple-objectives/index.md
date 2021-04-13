@@ -95,6 +95,12 @@ Let's put the above components together. The model observes a state, concatenate
 
 $$\[b, 0, b, b, b]$$, where b is an arbitrary integer. In this example, we would be indexing mode 1, in a model with up to 5 learned modes. We do some evaluations around what b should be depending on the path that the maximum distance follows during training, but for our current demonstrations, we simply set **b=1**.
 
+At inference time, therefore, we might have something like this:
+
+$$\[s^1 , s^2 , ... , s^O] + \[1, 0, 1, 1] \rightarrow \[a_f, a_r] $$,
+
+where $a_f$ and $a_r$ represent the forward and rotational velocities in this context, 
+
 
 
 
