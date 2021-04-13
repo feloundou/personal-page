@@ -36,11 +36,17 @@ Each policy on the Pareto front is the optimal policy for a particular setting o
 
 #### Proposed Solution
 
-To approach this problem, we start with a reinforcement learning (RL) framework, where policies can be engineered, back-tested and visually inspected. In an offline RL setting, we take a batch of data collected from multiple polices and try to learn from it mode-conditional policies. So in our ideal scenario, this single policy, conditional on the current state and a context vector would correspond exactly to the policy of some expert conditional only on the state.
+To approach this problem, we start with a reinforcement learning (RL) framework, where policies can be engineered, back-tested and visually inspected. In an offline RL setting, we take a batch of data collected from multiple polices and try to learn from it mode-conditional policies. So in our ideal scenario, this single policy, conditional on the current state and a context vector would correspond exactly to the policy of some expert conditional only on the state. It could perhaps be represented as, having an agent for which a policy, conditional on state **and** context, corresponds approximately to an arbitrary agent's policy given the same state. So, in context one, our agent would correspond to:
+
+$$\pi(a| s, z\_1) = \pi\_{expert_1}(a|s) $$.
+
+Arbitrarily, therefore, the formulation would be:
+
+* >
 
 In our approach, we sought to design a method to classify examples from multiple experts, then learn conditional policies. There are therefore two major elements to the model: a **classifier** and a **generator**. The **classifier** we use is a VQ-VAE-style encoder that takes as input state-transition data (or state-action pairs) and output some proposed discrete categorical labels. The **generator** is a Gaussian actor that takes as input the proposed deterministic latent context labels, and current state and evaluates the log probability of the given expert's action given those probabilities.
 
-Let D represent the dimensionality (number of) experts, z represent some latent context, s represent the current state, and s' represent the next state. The training objective is therefore: 
+Let D represent the dimensionality (number of) experts, z represent some latent context, s represent the current state, and s' represent the next state. The training objective can be represented as: 
 
 $$ \max{\pi{\theta}, D} \mathbb{E\_{c \sim G}}{\mathbb{E\_{s,a,s' \sim \pi{\theta},z}{\log P\_D (z|s'-s)}} = \max{\pi{\theta}, D}\mathbb{E\_{c\sim G}}{\mathbb{E_{s,a,s' \sim \mathcal{D}}}{\pi{\theta}(a|s,z) \log P_D(z|s'-s)}} $$
 
@@ -81,7 +87,7 @@ $$L = \frac{ \log p(\delta s|z_q (\delta s)) + ||sg\[(z_e(\delta s)] - e||^2_2 +
 
 Because the two (or three if you count the encoder and decoder as separate) networks train concurrently, we want to make sure incentives are well-aligned. Simply, the numerator is the VQ-VAE objective, and the denominator is the policy loss.
 
-The first term of the numerator is a reconstruction loss to encourage the encoder and decoder to communicate effectively through good latent representations. Then there is an L2 loss from the encoder output that incentives the encoder to make representations that are close to the embeddings. There is also an L2 loss from the decoder output that incentives the embeddings to stay close to the encoder representations. Lastly, the denominator is the policy loss which makes the actions more likely when the clustering algorithm is more confident about the context. All these moving parts are trained simultaneously.
+As discussed briefly above, The first term of the numerator is a reconstruction loss to encourage the encoder and decoder to communicate effectively through good latent representations. Then there is an L2 loss from the encoder output that incentives the encoder to make representations that are close to the embeddings. There is also an L2 loss from the decoder output that incentives the embeddings to stay close to the encoder representations. Lastly, the denominator is the policy loss which makes the actions more likely when the clustering algorithm is more confident about the context. All these moving parts are trained simultaneously.
 
 
 
