@@ -77,7 +77,7 @@ Something perhaps noteworthy is that **the labels are the most essential compone
 
 ![](distances_vector.png)
 
-An ordinary VQ-VAE would apply the argmin function and return a context label of 1, to correspond with the index at which the distance is minimal. We instead, take that whole distance vector and concatenate it to the state observations to pass through the Gaussian actor. Note that this implies that as the model learns to better distinguish between behavioral modes, the distance at the correct index should approach 0. This implication is a key insight for how we give the model a context, discussed below.
+An ordinary VQ-VAE would apply the argmin operation to the above vector and return a context label of 1, which corresponds to the index at which the distance is minimal. We instead, take that whole distance vector and concatenate it to the state observations to pass through the Gaussian actor. Note that this implies that as the model learns to better distinguish between behavioral modes, the distance at the correct index should approach 0. This implication is a key insight for how we give the model a context, discussed below.
 
 These distances will become the instructions that we send to the generator to tell it how we want it to behave. 
 
@@ -101,10 +101,6 @@ $$\[s^1 , s^2 , ... , s^O] + \[1, 0, 1, 1] \rightarrow \[a_f, a_r] $$,
 
 where $a_f$ and $a_r$ represent the forward and rotational velocities in this context, and in a general context would simply be the generator output.
 
-
-
-
-
 **The Training Objective**
 
 Based on the network objectives above, it should be fairly straightforward to deduce the analytic form for the training objective. Here is the formula we use:
@@ -126,8 +122,6 @@ The setting we chose for experimentation is Safety Gym.
 
 
 It is a continuous control environment that I chose specifically because we can explicitly design behavior and test the quality of context-specific imitation. In this setting, an agent, the red moving object, lives on this plane where he can navigate to any space using an action vector that selects forward and rotational velocities. There is a goal in green, and as you can see, it resets to a different random location every time it is reached. The purple dots are hazards that are costly to run into and the vase (in aquamarine can be ignored).
-
-
 
 
 
@@ -221,4 +215,4 @@ None of this would have been possible without the continual support of the OpenA
 
 2. Abbas Abdolmaleki, Sandy H. Huang, Leonard Hasenclever, Michael Neunert, H. Francis Song, Martina Zambelli, Murilo F. Martins, Nicolas Heess, Raia Hadsell, Martin Riedmiller: “A Distributional View on Multi-Objective Policy Optimization”, 2020; [arXiv:2005.07513](http://arxiv.org/abs/2005.07513).
 
-**GitHub:**
+**You can find the code for my project on my [GitHub](https://github.com/feloundou/memo).**
