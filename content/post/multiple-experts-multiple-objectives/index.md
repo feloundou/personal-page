@@ -20,17 +20,15 @@ The internet is chock full of data that many machine learning models leverage fo
 
 To approach this problem, we start with a reinforcement learning (RL) framework, where policies can be engineered, back-tested and visually inspected. In an offline RL setting, we take a batch of data collected from multiple polices and try to learn from it mode-conditional policies. So in our ideal scenario, this single policy, conditional on the current state and a context vector would correspond exactly to the policy of some expert conditional only on the state.
 
-In our approach, we sought to design a method to classify examples from multiple experts, then learn conditional policies. There are therefore two major elements to the model: a \textbf{classifier} and a \textbf{generator}. The \textbf{classifier} we use is a VQ-VAE-style encoder that takes as input state-transition data (or state-action pairs) and output some proposed discrete categorical labels. The \textbf{generator} is a Gaussian actor that takes as input the proposed deterministic latent context labels, and current state and evaluates the log probability of the given expert's action given those probabilities.
+In our approach, we sought to design a method to classify examples from multiple experts, then learn conditional policies. There are therefore two major elements to the model: a **classifier** and a **generator**. The **classifier** we use is a VQ-VAE-style encoder that takes as input state-transition data (or state-action pairs) and output some proposed discrete categorical labels. The **generator** is a Gaussian actor that takes as input the proposed deterministic latent context labels, and current state and evaluates the log probability of the given expert's action given those probabilities.
 
 Let D represent the dimensionality (number of) experts, z represent some latent context, s represent the current state, and s' represent the next state. The training objective is therefore: 
 
-$$  \max{\pi{\theta}, D} \underE{c\sim G}{\underE{s,a,s' \sim \pi{\theta},z}{\log P_D (z|s'-s)}} = \max{\pi{\theta}, D} \underE{c\sim G}{\underE{s,a,s' \sim \mathcal{D}}{\pi{\theta}(a|s,z) \log P_D (z|s'-s)}} 
-$$
+$$  \max{\pi{\theta}, D} \underE{c\sim G}{\underE{s,a,s' \sim \pi{\theta},z}{\log P_D (z|s'-s)}} = \max{\pi{\theta}, D} \underE{c\sim G}{\underE{s,a,s' \sim \mathcal{D}}{\pi{\theta}(a|s,z) \log P_D (z|s'-s)}} $$
 
 
 
-$$  \max{\pi{\theta}, D} \mathbb{E}{c\sim G}{\mathbb{E}{s,a,s' \sim \pi{\theta},z}{\log P_D (z|s'-s)}} = \max{\pi{\theta}, D} \mathbb{E}{c\sim G}{\mathbb{E}{s,a,s' \sim \mathcal{D}}{\pi{\theta}(a|s,z) \log P_D (z|s'-s)}} 
-$$
+$$ \max{\pi{\theta}, D} \mathbb{E\_{c\sim G}}{\mathbb{E\_{s,a,s' \sim \pi{\theta},z}{\log P\_D (z|s'-s)}} = \max{\pi{\theta}, D}\mathbb{E\_{c\sim G}}{\mathbb{E_{s,a,s' \sim \mathcal{D}}}{\pi{\theta}(a|s,z) \log P_D (z|s'-s)}} $$
 
 
 
