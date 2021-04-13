@@ -34,9 +34,11 @@ Each policy on the Pareto front is the optimal policy for a particular setting o
 
 
 
-#### Proposed Solution
+#### Our Proposed Solution
 
-To approach this problem, we start with a reinforcement learning (RL) framework, where policies can be engineered, back-tested and visually inspected. In an offline RL setting, we take a batch of data collected from multiple polices and try to learn from it mode-conditional policies. So in our ideal scenario, this single policy, conditional on the current state and a context vector would correspond exactly to the policy of some expert conditional only on the state. It could perhaps be represented as, having an agent for which a policy, conditional on state **and** context, corresponds approximately to an arbitrary agent's policy given the same state. So, in context one, our agent would correspond to:
+To approach this problem, we start with a reinforcement learning (RL) framework, where policies can be engineered, back-tested and visually inspected. We secretly dubbed this model **MEMO** to stand for Multiple Experts, Multiple Objectives and because it is easier to remember. 
+
+In an offline RL setting, we take a batch of data collected from multiple polices and try to learn from it mode-conditional policies. So in our ideal scenario, this single policy, conditional on the current state and a context vector would correspond exactly to the policy of some expert conditional only on the state. It could perhaps be represented as, having an agent for which a policy, conditional on state **and** context, corresponds approximately to an arbitrary agent's policy given the same state. So, in context one, our agent would correspond to:
 
 $$\pi(a| s, z\_1) = \pi\_{expert_1}(a|s) $$.
 
@@ -48,7 +50,7 @@ In our approach, we sought to design a method to classify examples from multiple
 
 Let D represent the dimensionality (number of) experts, z represent some latent context, s represent the current state, and s' represent the next state. The training objective can be represented as: 
 
-$$ \max\_{\pi\_{\theta}, D} \mathbb{E\_{c \sim G}} \mathbb{E\_{s,a,s' \sim \pi{\theta},z $$
+$$ \max\_{\pi\_{\theta}, D} \mathbb{E\_{c \sim G}} \mathbb{E\_{s,a,s' \sim \pi{\theta},z}} $$
 
 $$ max{\pi{\theta}, D} \mathbb{E\_{c \sim G}}{\mathbb{E\_{s,a,s' \sim \pi{\theta},z}{\log P\_D (z|s'-s)}} = max{\pi{\theta}, D}\mathbb{E\_{c\sim G}}{\mathbb{E_{s,a,s' \sim \mathcal{D}}}{\pi{\theta}(a|s,z) \log P_D(z|s'-s)}} $$
 
@@ -175,19 +177,21 @@ After 5000 epochs, some distinguishable differences emerge between the modes of 
 
 It appears that our model learns some of the goal seeking behavior in Mode 2, and in Mode 3 continues to learn to go forward. It seems like Mode 1 and Mode 4 do not map clearly to a distinct behavior, or are averages of the two.
 
-**Desiderata**
-
-Anyone who has trained VAEs understands they can be famously fickle. I would lik
-
-
-
 **Future Directions**
 
 As I continue to explore this methodology, I would like to eventually reach a point where the findings are predictable (qualitatively and quantitatively for each mode-conditional policy) and generalizable. Moreover, I would be interested Of course, one of the crucial lessons we learned over the course of the project is that the path context matters in disentangling and subsequently guiding behavior. In future work, I would like to explore these dependencies in greater depth by incorporating context-aware mechanisms such as **attention** in its various forms. I would also like to experiment with different modalities like language, and make discovered latent contexts interpretable for settings where the expert policies cannot be engineered/observed directly.
 
+**Desiderata**
+
+Anyone who has trained VAEs understands they can be famously fickle. Throughout my experimentation, I experimented with some of the usual tricks to stabilize learning, such as **cyclical annealing**, **warmup**, **learning rate scheduling**. Although the final model employs none of these, I suspect they will be re-incorporated as the model becomes more complex. Here is what a typical loss curve looks like for our composite training objective.
+
+![](w-b-chart-4_13_2021-12_06_01-pm.png)
+
 
 
 **Acknowledgements**
+
+None of this would have been possible without the continual support of the OpenAI organization as a whole, which launched the Scholars 
 
 **References**
 
