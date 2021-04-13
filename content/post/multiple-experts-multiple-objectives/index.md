@@ -14,6 +14,24 @@ At long last, I present my Scholars project, where I engineered a (somewhat prim
 
 The internet is chock full of data that many machine learning models leverage for training. These data, however, are produced by people, entities or organizations that have their own utility functions. These data, can therefore be thought of as being conditional on those utility functions. When our models ingest this large chunk of data wholesale, they tend to assimilate and reproduce behaviors mapping to these utility functions. As researchers and designers, we may want to retain the ability to steer our trained models towards or away from some modes of behavior. Furthermore, as our models grow in capability and are applied to increasingly complex and diverse settings, we may want to steer their behavior to align with the context or human preferences.
 
+#### Related Literature
+
+##### *Multiple Objective Reinforcement Learning*
+
+A multi-objective [MDP](https://en.wikipedia.org/wiki/Markov_decision_process) (MO-MDP) is defined with multiple unconstrained objectives, and so usually does not contain a single optimal policy but rather a set of optimal policies, called the **Pareto front.** A policy is **Pareto-optimal** in an MO-MDP if there exists no other policy that improces its return for one objective without decreasing the return for another.
+
+Multi-objective reinforcement learning (MORL) algorithms are either single-policy or multiple-policy. *Single policy MORL methods* learn a policy that is optimal for a given setting of reward preferences. Most rely on linear **scalarization** which restricts solutions to the convex portions of the Pareto front and can be sensitive to reward scales. *Multi-policy MORL methods* aim to find a set of policies that covers the whole Pareto front. 
+
+One state of the art approach, **Multi-objective Maximum a Posteriori Policy Optimization (MO-MPO)**, has the goal to learn a single policy that must trade off across different objectives. While most MORL algorithms are based on linear scalarization, MO-MPO takes a distributional approach: for each policy improvement step, MO-MPO first computes a non-parametric policy for each objective that improves the (parametric) policy with respect to that objective, subject to a non-negative constraint  on the KL-divergence between the improved and old policies. Then, the policy is updated via supervised learning on the sum of these non-parametric policies. Intuitively, defines the influence of objective $r_k$ on the final policy; an objective with larger $r_k$ has more influence. MO-MPO can be run multiple times, with different constraint settings, to find a Pareto front of policies. 
+
+##### *Constrained Reinforcement Learning*
+
+Constrained RL algorithms seek policies that meet the desired constraints at deployment time. These can be viewed as special cases of MORL, where some of the objectives are constraints. Typical approaches for constrained RL use Lagrangian relaxation, but are limited in many ways. Multi-objective RL can be seen as a type of constrained RL since the **constraint-satisfying optimal policy must be Pareto optimal**.
+
+Each policy on the Pareto front is the optimal policy for a particular setting of preferences (i.e., desired trade-off over objectives). This is typically encoded via a preference vector, in which each element k represents the relative importance of the corresponding objective. Existing Lagrangian approaches involve linear scalarization, however, and thus cannot find solutions that lie on concave portions of the true Pareto front. 
+
+
+
 
 
 #### Proposed Solution
@@ -83,11 +101,15 @@ It is a continuous control environment that I chose specifically because we can 
 
 **Demonstrations**
 
-For the purpose of this demonstration, let us take a look at 2 experts. One who is purely goal-seeking and the other who simply moves forward. 
+For the purpose of this demonstration, let us take a look at 2 experts. One who is purely goal-seeking and the other who simply moves forward. You can think of the plots that I will present henceforth as a bird-eye view of the earlier environment, with the blue dots representing the locations where the goal reset after being reached and the red dots representing the hazards. All the environments in the demonstrations are identical, the only variable thing is the agent’s behavior and subsequently, number of goals reached. The goal-seeking agent is:
 
 
 
-You can think of the plots that I will present henceforth as a bird-eye view of the earlier environment, with the blue dots representing the locations where the goal reset after being reached and the red dots representing the hazards. All the environments in the demonstrations are identical, the only variable thing is the agent’s behavior and subsequently, number of goals reached.
+![](goal_seeker.png "Goal-Seeking Agent")
+
+![](forward_expert.png "Forward Agent")
+
+
 
 Before we look at the demonstrations, I would like to point out 2 factors that seem to significantly influence expert behavior encoding. One is k, the number of allowed partitions, and the other the step size when calculating state transitions. Here, we are looking at a step size of 1. We can see that with fewer allowed partitions, the model struggles to map different experts to different latent clusters, but starting with k=4, we see significant differentiation.
 
@@ -97,35 +119,41 @@ To refresh your memory, here is what these experts look like in this setting. In
 
 We set k to 4 for this particular experiment, and this what behavior corresponds to the 4 clusters. The model is sort of learning to go forward. It tends to be true across experiments that it will pick up the simplest behavior first, before learning more complex ones.
 
+*Epoch 1: Mode 1*
+
 ![](epoch1_mode1.png "Epoch 1: Mode 1")
 
-
+*Epoch 1: Mode 2*
 
 ![Epoch 1: Mode 2](epoch1_mode2.png "Epoch 1: Mode 2")
 
-
+*Epoch 1: Mode 3*
 
 ![](epoch1_mode3.png "Epoch 1: Mode 3")
 
-
+*Epoch 1: Mode 4*
 
 ![](epoch1_mode4.png "Epoch 1: Mode 4")
 
 
 
-This is the model after 5000 epochs, where it has learned some mode-conditional behavior, with some caveats.
+After 5000 epochs, some distinguishable differences emerge between the modes of behavior. We might even say that our model has learned some mode-conditional behavior, with some caveats.
+
+*Epoch 5000:  Mode 1*
 
 ![](epoch5000_mode1.png "Epoch 5000: Mode 1")
 
-
+*Epoch 5000: Mode 2*
 
 ![](epoch5000_mode2.png "Epochs 5000: Mode 2")
 
-
+*Epoch 5000:  Mode 3*
 
 ![](epoch5000_mode3.png "Epochs 5000: Mode 3")
 
 
+
+*Epoch 5000: Mode 4*
 
 ![](epoch5000_mode4.png "Epochs 5000: Mode 4")
 
@@ -135,10 +163,18 @@ Here, we show that our model learns some of the goal seeking behavior in Mode 2,
 
 **Future Directions**
 
-As I continue to explore this methodology, I would like to eventually reach a point where the findings are predictable (qualitatively and quantitatively for each mode-conditional policy) and generalizable. Moreover, I would be interested Of course, one of the crucial lessons we learned over the course of the project is that the path context matters in disentangling and subsequently guiding behavior. In future work, I would like to explore these dependencies in greater depth by incorporating context-aware mechanisms such as **attention** in its various forms. I would also like to experiment with different modalities like language, and make discovered latent contexts interpretable for settings where the expert policies cannot be engineered/obseved directly.
+As I continue to explore this methodology, I would like to eventually reach a point where the findings are predictable (qualitatively and quantitatively for each mode-conditional policy) and generalizable. Moreover, I would be interested Of course, one of the crucial lessons we learned over the course of the project is that the path context matters in disentangling and subsequently guiding behavior. In future work, I would like to explore these dependencies in greater depth by incorporating context-aware mechanisms such as **attention** in its various forms. I would also like to experiment with different modalities like language, and make discovered latent contexts interpretable for settings where the expert policies cannot be engineered/observed directly.
 
 **Final Thoughts**
 
 Now that the program has drawn to a close, it is difficult to close 
+
+
+
+**References**
+
+1. [](https://www.semanticscholar.org/paper/695a2c95eacdbccb7a73d2f1e90e7b35b4b3d864)Neural Discrete Representation Learning, NeurIPS 2017, Aaron van den Oord, Oriol Vinyals, koray kavukcuoglu.
+
+2. 
 
 **GitHub:**
