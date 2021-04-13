@@ -77,7 +77,7 @@ Something perhaps noteworthy is that **the labels are the most essential compone
 
 ![](distances_vector.png)
 
-An ordinary VQ-VAE would apply the argmin function and return a context label of 1, to correspond with the index at which the distance is minimal. We instead, take that whole distance vector and concatenate it to the state observations to pass through the Gaussian actor. Note that this implies that as the model learns to better distinguish between behavioral modes, the distance at the correct index should approach 0. This implication is a key insight for how we give the model a context.
+An ordinary VQ-VAE would apply the argmin function and return a context label of 1, to correspond with the index at which the distance is minimal. We instead, take that whole distance vector and concatenate it to the state observations to pass through the Gaussian actor. Note that this implies that as the model learns to better distinguish between behavioral modes, the distance at the correct index should approach 0. This implication is a key insight for how we give the model a context, discussed below.
 
 These distances will become the instructions that we send to the generator to tell it how we want it to behave. 
 
