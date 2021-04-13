@@ -18,7 +18,7 @@ The internet is chock full of data that many machine learning models leverage fo
 
 ##### *Multiple Objective Reinforcement Learning*
 
-A multi-objective [MDP](https://en.wikipedia.org/wiki/Markov_decision_process) (MO-MDP) is defined with multiple unconstrained objectives, and so usually does not contain a single optimal policy but rather a set of optimal policies, called the **Pareto front.** A policy is **Pareto-optimal** in an MO-MDP if there exists no other policy that improces its return for one objective without decreasing the return for another.
+A multi-objective [MDP](https://en.wikipedia.org/wiki/Markov_decision_process) (MO-MDP) is defined with multiple unconstrained objectives, and so usually does not contain a single optimal policy but rather a set of optimal policies, called the **Pareto front.** A policy is **Pareto-optimal** in an MO-MDP if there exists no other policy that improves its return for one objective without decreasing the return for another.
 
 Multi-objective reinforcement learning (MORL) algorithms are either single-policy or multiple-policy. *Single policy MORL methods* learn a policy that is optimal for a given setting of reward preferences. Most rely on linear **scalarization** which restricts solutions to the convex portions of the Pareto front and can be sensitive to reward scales. *Multi-policy MORL methods* aim to find a set of policies that covers the whole Pareto front. 
 
@@ -50,9 +50,7 @@ In our approach, we sought to design a method to classify examples from multiple
 
 Let D represent the dimensionality (number of) experts, z represent some latent context, s represent the current state, and s' represent the next state. The training objective can be represented as: 
 
-$$ \max\_{\pi\_{\theta}, D} \mathbb{E\_{c \sim G}} \[\mathbb{E\_{s,a,s' \sim \pi{\theta},z}} \log P\_D (z|s'-s) ] = \max\_{\pi\_{\theta}, D} \mathbb{E\_{c \sim G}} {\mathbb{E_{s,a,s' \sim \mathcal{D}}}{\pi{\theta}(a|s,z) \log P_D(z|s'-s)}}  $$
-
-$$ max{\pi{\theta}, D} \mathbb{E\_{c \sim G}}{\mathbb{E\_{s,a,s' \sim \pi{\theta},z}{\log P\_D (z|s'-s)}} = max{\pi{\theta}, D}\mathbb{E\_{c\sim G}}{\mathbb{E_{s,a,s' \sim \mathcal{D}}}{\pi{\theta}(a|s,z) \log P_D(z|s'-s)}} $$
+$$ \max\_{\pi\_{\theta}, D} \mathbb{E\_{c \sim G}} \[\mathbb{E\_{s,a,s' \sim \pi{\theta},z}} \log P\_D (z|s'-s) ] = \max\_{\pi\_{\theta}, D} \mathbb{E\_{c \sim G}} \[{\mathbb{E\_{s,a,s' \sim \mathcal{D}}}{\pi\_{\theta}(a|s,z) \log P_D(z|s'-s)}} ] $$
 
 The two terms on the right-hand side are optimized by two networks: (i) a VQ-VAE style network, and (ii) a Gaussian actor.
 
@@ -79,7 +77,7 @@ Something perhaps noteworthy is that **the labels are the most essential compone
 
 ![](distances_vector.png)
 
-An ordinary VQ-VAE would apply the argmin function and return a context label of 1, to correspond with the index at which 
+An ordinary VQ-VAE would apply the argmin function and return a context label of 1, to correspond with the index at which the distance is minimal. We instead, take 
 
 These distances will become the instructions that we send to the generator to tell it how we want it to behave. 
 
