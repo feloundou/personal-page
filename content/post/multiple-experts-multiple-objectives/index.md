@@ -54,13 +54,15 @@ $$ \max\_{\pi\_{\theta}, D} \mathbb{E\_{c \sim G}} \[\mathbb{E\_{s,a,s' \sim \pi
 
 $$ max{\pi{\theta}, D} \mathbb{E\_{c \sim G}}{\mathbb{E\_{s,a,s' \sim \pi{\theta},z}{\log P\_D (z|s'-s)}} = max{\pi{\theta}, D}\mathbb{E\_{c\sim G}}{\mathbb{E_{s,a,s' \sim \mathcal{D}}}{\pi{\theta}(a|s,z) \log P_D(z|s'-s)}} $$
 
-The two terms above are optimized by two networks: (i) a VQ-VAE style network, and (ii) a Gaussian actor.
+The two terms on the right-hand side are optimized by two networks: (i) a VQ-VAE style network, and (ii) a Gaussian actor.
 
 **Training the Model**
 
 So what is the process for training the model? First, we collect examples, which is straightforward. We chose to work with examples rather than expert policies because examples of success are easier to come by in nature, especially if we think back to our motivation of Internet data. 
 
-Then we pass these examples through a Vector-Quantized Variational Auto-Encoder (VQ-VAE) that will cluster them. These labels are passed to a generator, which in this context is a Gaussian actor, that will recover a probability distribution based on the current state and proposed cluster label. Let’s take a closer look at the architecture.
+Then we pass these examples through a Vector-Quantized Variational Auto-Encoder (VQ-VAE) that will cluster them. These labels are passed to a generator, which in this context is a Gaussian actor, that will recover a probability distribution based on the current state and proposed cluster label. 
+
+
 
 **A. The Clustering Network**
 
@@ -71,7 +73,15 @@ $$ L = \log p(x|z_q (x)) + ||sg\[(z_e(x)] - e||^2_2 + \beta||z_e(x) - sg\[e]||^2
 where sg represents a non-differentiable operator. The first term, $$ \log( p(x|z_q) )
 $$ is **reconstruction loss** and measures how well the network is able to regenerate the network's input, given the latent context. The second term, $$ ‖sg\[z_e(x)]− e ‖^2$$ is the **codebook loss**, which moves the embedding vectors closer to the encoder output via an L2 loss (since they are not updated by gradient descent). The third term, $$ β‖ z_e(x)− sg\[e] ‖^2$$ **commitment loss** is included to make sure the encoder commits to an embedding. 
 
-Note that this means that the dimensionality of the embedding space determines the  maximum total number of clusters you allow the VQ-VAE to create. If you set k=n, then you can get **up to** n clusters. I want to note here that the labels are the most essential component here. Where a traditional VQ-VAE produces discrete labels, instead of the discrete labels, we simply take the distance vectors as they contain a richer signal while the model trains. These distances will become the instructions that we send to the generator to tell it how we want it to behave.
+Note that this means that the dimensionality of the embedding space determines the  maximum total number of clusters you allow the VQ-VAE to create. If you set k=n, then you can get **up to** n clusters. 
+
+Something perhaps noteworthy is that **the labels are the most essential component** here. Where a traditional VQ-VAE produces discrete labels, we simply take the distance vectors directly as they contain a richer signal while the model trains. Here is an example. A sample distance vector for a particular samples passed through a VA-VAE with **k=5** might look something like this:
+
+![](distances_vector.png)
+
+An ordinary VQ-VAE would apply the argmin function and return a context label of 1, to correspond with the index at which 
+
+These distances will become the instructions that we send to the generator to tell it how we want it to behave. 
 
 
 
@@ -79,7 +89,11 @@ Note that this means that the dimensionality of the embedding space determines t
 
 Now that we have received cluster labels from the VQ-VAE, we concatenate them with the state and pass them through a Gaussian MLP. From the Gaussian’s Normal Distribution, then, we evaluate the probability of the actions taken by the “expert”, given the state and cluster labels we have assigned. What happens here is that we increase the probabilities of the true action under the conditional normal distribution. What does the training objective look like? I will flash the formula quickly then proceed to explain the highlights.
 
-This is what happens at inference time. The model observes a state, concatenates a context vector supplied by the supervisor (currently me) and then produces a conditional policy and draws an action. Let’s look at some demos.
+
+
+**Test Time**
+
+Let's put the above components together. The model observes a state, concatenates a context vector supplied by the supervisor (currently me) and then produces a conditional policy and draws an action. Let’s look at some demos.
 
 
 
