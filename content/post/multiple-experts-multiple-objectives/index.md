@@ -26,9 +26,7 @@ Let D represent the dimensionality (number of) experts, z represent some latent 
 
 $$  \max{\pi{\theta}, D} \underE{c\sim G}{\underE{s,a,s' \sim \pi{\theta},z}{\log P_D (z|s'-s)}} = \max{\pi{\theta}, D} \underE{c\sim G}{\underE{s,a,s' \sim \mathcal{D}}{\pi{\theta}(a|s,z) \log P_D (z|s'-s)}} $$
 
-
-
-$$ \max{\pi{\theta}, D} \mathbb{E\_{c\sim G}}{\mathbb{E\_{s,a,s' \sim \pi{\theta},z}{\log P\_D (z|s'-s)}} = \max{\pi{\theta}, D}\mathbb{E\_{c\sim G}}{\mathbb{E_{s,a,s' \sim \mathcal{D}}}{\pi{\theta}(a|s,z) \log P_D (z|s'-s)}} $$
+$$ \max{\pi{\theta}, D} \mathbb{E\_{c \sim G}}{\mathbb{E\_{s,a,s' \sim \pi{\theta},z}{\log P\_D (z|s'-s)}} = \max{\pi{\theta}, D}\mathbb{E\_{c\sim G}}{\mathbb{E_{s,a,s' \sim \mathcal{D}}}{\pi{\theta}(a|s,z) \log P_D (z|s'-s)}} $$
 
 
 
