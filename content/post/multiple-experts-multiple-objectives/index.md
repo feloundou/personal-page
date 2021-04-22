@@ -30,10 +30,6 @@ Constrained RL algorithms seek policies that meet the desired constraints at dep
 
 Each policy on the Pareto front is the optimal policy for a particular setting of preferences (i.e., desired trade-off over objectives). This is typically encoded via a preference vector, in which each element k represents the relative importance of the corresponding objective. Existing Lagrangian approaches involve linear scalarization, however, and thus cannot find solutions that lie on concave portions of the true Pareto front. 
 
-
-
-
-
 #### Our Proposed Solution
 
 To approach this problem, we start with a reinforcement learning (RL) framework, where policies can be engineered, back-tested and visually inspected. We secretly dubbed this model **MEMO** to stand for Multiple Experts, Multiple Objectives and because it is easier to remember. 
@@ -60,8 +56,6 @@ So what is the process for training the model? First, we collect examples, which
 
 Then we pass these examples through a Vector-Quantized Variational Auto-Encoder (VQ-VAE) that will cluster them. These labels are passed to a generator, which in this context is a Gaussian actor, that will recover a probability distribution based on the current state and proposed cluster label. 
 
-
-
 **A. The Clustering Network**
 
 Our clustering algorithm here is a VQ-VAE inspired by [Oord et al (2017)](https://arxiv.org/pdf/1711.00937.pdf) with a small modification. The VQ-VAE, as usual has the objective of distilling its inputs to latent dimensions well enough that the decoder can reconstruct them. In the middle here is the embedding space, which maps the encoder representations to cluster via a simple argmin function, i.e. if a tensor is closest in euclidean distance to embedding tensor j, then map that sample to cluster *j*. Its training objective is: 
@@ -79,7 +73,9 @@ Something perhaps noteworthy is that **the labels are the most essential compone
 
 An ordinary VQ-VAE would apply the argmin operation to the above vector and return a context label of 1, which corresponds to the index at which the distance is minimal. We instead, take that whole distance vector and concatenate it to the state observations to pass through the Gaussian actor. Note that this implies that as the model learns to better distinguish between behavioral modes, the distance at the correct index should approach 0. This implication is a key insight for how we give the model a context, discussed below.
 
-These distances will become the instructions that we send to the generator to tell it how we want it to behave. 
+These distances will become the instructions that we send to the generator to tell it how we want it to behave. Here is a rough illustration of the above:
+
+![](vq-vae-diagram.png)
 
 
 
@@ -87,7 +83,9 @@ These distances will become the instructions that we send to the generator to te
 
 Now that we have received cluster labels from the VQ-VAE, we concatenate them with the state and pass them through a Gaussian MLP. From the Gaussian’s Normal Distribution, then, we evaluate the probability of the actions taken by the “expert”, given the state and cluster labels we have assigned. What happens here is that we increase the probabilities of the true action under the conditional normal distribution. What does the training objective look like? I will flash the formula quickly then proceed to explain the highlights.
 
+Our Gaussian policy network can be represented as:
 
+![](gaussian_mlp.png)
 
 **Test Time**
 
@@ -111,29 +109,19 @@ Because the two (or three if you count the encoder and decoder as separate) netw
 
 As discussed briefly above, The first term of the numerator is a reconstruction loss to encourage the encoder and decoder to communicate effectively through good latent representations. Then there is an L2 loss from the encoder output that incentives the encoder to make representations that are close to the embeddings. There is also an L2 loss from the decoder output that incentives the embeddings to stay close to the encoder representations. Lastly, the denominator is the policy loss which makes the actions more likely when the clustering algorithm is more confident about the context. All these moving parts are trained simultaneously.
 
-
-
 **Experimental Setup**
 
 The setting we chose for experimentation is Safety Gym. 
 
 ![](experiment_setup.gif "Safety Gym")
 
-
-
 It is a continuous control environment that I chose specifically because we can explicitly design behavior and test the quality of context-specific imitation. In this setting, an agent, the red moving object, lives on this plane where he can navigate to any space using an action vector that selects forward and rotational velocities. There is a goal in green, and as you can see, it resets to a different random location every time it is reached. The purple dots are hazards that are costly to run into and the vase (in aquamarine can be ignored).
-
-
 
 **Demonstrations**
 
 For the purpose of this demonstration, let us take a look at 2 experts. One who is purely goal-seeking and the other who simply moves forward. You can think of the plots that I will present henceforth as a bird-eye view of the earlier environment, with the blue dots representing the locations where the goal reset after being reached and the red dots representing the hazards. All the environments in the demonstrations are identical, the only variable thing is the agent’s behavior and subsequently, number of goals reached. The goal-seeking agent is:
 
-
-
 ![](goal_seeker.png "Goal-Seeking Agent")
-
-
 
 The forward-moving agent is:
 
@@ -147,53 +135,63 @@ With a step size of 1,we see that with fewer allowed partitions, the model strug
 
 When we take larger steps to calculate the transitions, however, the model seems to learn to cluster much earlier. You can maybe think of this a case where one agent walks forward all the time and the other agent walks forward for 3 steps then turns. In the one step scenario, the model would have difficulty separating the two agents when they are walking straight for some of the time. A future direction therefore, might be to model long- and short-term dependencies, such as with LSTMs or with attention.
 
+#### **Results**
+
+Before evaluating the demonstrations, I would like to point out 2 factors that seem to significantly influence the VQ-VAE's ability to disentangle expert behavior. One is k, the number of allowed partitions, and the other the state-difference step size when calculating state differences. What we mean here by state difference step size, is the number of action steps between states for which we calculate transitions. If this factor is one, we calculate the state differences from taking a single action. If this factor is n, then we take n actions, then calculate the differences in states.
 
 
 
+Below is a step size of 1. We can see that with fewer allowed latent partitions, the model struggles to map different experts to different latent clusters, but starting with k=4, we see significant differentiation. 
 
-***Results***
+
+
+![](class_statediff1.png)
+
+
+
+Next, we evaluate the model's performance with a state difference step size of 5. When we take larger steps to calculate the transitions, however, the model seems to learn to cluster with fewer allowed partitions. You can maybe think of this a case where one agent walks forward all the time and the other agent walks forward for 3 steps then turns. In the one step scenario, the model would have difficulty separating the two agents when they are walking straight for some of the time. A future direction therefore, might be to model long- and short-term dependencies, such as with LSTMs or with attention. 
+
+
+
+![](1000epochs_class_n5.png)
 
 In the demonstrations that follow, I keep everything constant. This means that the environment is seeded, such that an expert reaching a goal will cause it to respawn in a place entirely determined by the seed. This serves as a unit test for our approach, as the only varying factor is the context vector we supply to the agent at test time.  
 
 We set **k=4** for this particular experiment, meaning that we allow our model to learn up to 4 distinct behaviors from the data it consumes . Below, we step through and this what behavior corresponds to the 4 clusters. The model is sort of learning to go forward. It tends to be true across experiments that it will pick up the simplest behavior first, before learning more complex ones.
 
-*Epoch 1: Mode 1*
+**Epoch 1: Mode 1**
 
 ![](epoch1_mode1.png "Epoch 1: Mode 1")
 
-*Epoch 1: Mode 2*
+**Epoch 1: Mode 2**
 
 ![Epoch 1: Mode 2](epoch1_mode2.png "Epoch 1: Mode 2")
 
-*Epoch 1: Mode 3*
+**Epoch 1: Mode 3**
 
 ![](epoch1_mode3.png "Epoch 1: Mode 3")
 
-*Epoch 1: Mode 4*
+**Epoch 1: Mode 4**
 
 ![](epoch1_mode4.png "Epoch 1: Mode 4")
 
-
-
 After 5000 epochs, some distinguishable differences emerge between the modes of behavior. We might even say that our model has learned some mode-conditional behavior, with some caveats.
 
-*Epoch 5000:  Mode 1*
+**Epoch 5000:  Mode 1**
 
 ![](epoch5000_mode1.png "Epoch 5000: Mode 1")
 
-*Epoch 5000: Mode 2*
+**Epoch 5000: Mode 2**
 
 ![](epoch5000_mode2.png "Epochs 5000: Mode 2")
 
-*Epoch 5000:  Mode 3*
+**Epoch 5000:  Mode 3**
 
 ![](epoch5000_mode3.png "Epochs 5000: Mode 3")
 
-*Epoch 5000: Mode 4*
+**Epoch 5000: Mode 4**
 
 ![](epoch5000_mode4.png "Epochs 5000: Mode 4")
-
-
 
 It appears that our model learns some of the goal seeking behavior in Mode 2, and in Mode 3 continues to learn to go forward. It seems like Mode 1 and Mode 4 do not map clearly to a distinct behavior, or are averages of the two.
 
@@ -207,8 +205,6 @@ Anyone who has trained VAEs understands they can be famously fickle. Throughout 
 
 ![](w-b-chart-4_13_2021-12_06_01-pm.png)
 
-
-
 **Acknowledgements**
 
 None of this would have been possible without the continual support of the OpenAI organization as a whole, which launched the Scholars program. In particular, I would like to highlight my mentor, Dr. Joshua Achiam, as one of the principal driving forces behind my continued progress in this project. Muraya Maigua and Christina Hendricks, managers of the program were excellent stewards of this initiative. Finally, my fellow Scholars were a great source of feedback and additional resources.
@@ -216,7 +212,6 @@ None of this would have been possible without the continual support of the OpenA
 **References**
 
 1. [](https://www.semanticscholar.org/paper/695a2c95eacdbccb7a73d2f1e90e7b35b4b3d864)Aaron van den Oord, Oriol Vinyals, Koray Kavukcuoglu: “Neural Discrete Representation Learning”, 2017; [arXiv:1711.00937](http://arxiv.org/abs/1711.00937).
-
 2. Abbas Abdolmaleki, Sandy H. Huang, Leonard Hasenclever, Michael Neunert, H. Francis Song, Martina Zambelli, Murilo F. Martins, Nicolas Heess, Raia Hadsell, Martin Riedmiller: “A Distributional View on Multi-Objective Policy Optimization”, 2020; [arXiv:2005.07513](http://arxiv.org/abs/2005.07513).
 
 **You can find the code for my project on my [GitHub](https://github.com/feloundou/memo).**
