@@ -43,5 +43,5 @@ highlight_name: false
 email: ""
 ---
 
-I'm a member of the Fall 2020 class of OpenAI scholars. I will use this as a repository for my thoughts and insights throughout the journey towards learning how to help machines learn, an endeavour supported by OpenAI. I will document my daily discoveries on my Roam notes page. You may reach out to me to get reading permissions or to share feedback. 
+I'm an OpenAI research scholar, of the 2020 cohort. I will use this as a repository for my thoughts and insights throughout the journey towards learning how to help machines learn, an endeavour supported by OpenAI. Here, I document my daily discoveries on my Roam notes page. You may reach out to me to get reading permissions or to share feedback. 
 
