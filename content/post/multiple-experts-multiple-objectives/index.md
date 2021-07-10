@@ -77,8 +77,6 @@ These distances will become the instructions that we send to the generator to te
 
 ![](vq-vae-diagram.png)
 
-
-
 **B. The Policy Network**
 
 Now that we have received cluster labels from the VQ-VAE, we concatenate them with the state and pass them through a Gaussian MLP. From the Gaussian’s Normal Distribution, then, we evaluate the probability of the actions taken by the “expert”, given the state and cluster labels we have assigned. What happens here is that we increase the probabilities of the true action under the conditional normal distribution. What does the training objective look like? I will flash the formula quickly then proceed to explain the highlights.
@@ -139,19 +137,11 @@ When we take larger steps to calculate the transitions, however, the model seems
 
 Before evaluating the demonstrations, I would like to point out 2 factors that seem to significantly influence the VQ-VAE's ability to disentangle expert behavior. One is k, the number of allowed partitions, and the other the state-difference step size when calculating state differences. What we mean here by state difference step size, is the number of action steps between states for which we calculate transitions. If this factor is one, we calculate the state differences from taking a single action. If this factor is n, then we take n actions, then calculate the differences in states.
 
-
-
 Below is a step size of 1. We can see that with fewer allowed latent partitions, the model struggles to map different experts to different latent clusters, but starting with k=4, we see significant differentiation. 
-
-
 
 ![](class_statediff1.png)
 
-
-
 Next, we evaluate the model's performance with a state difference step size of 5. When we take larger steps to calculate the transitions, however, the model seems to learn to cluster with fewer allowed partitions. You can maybe think of this a case where one agent walks forward all the time and the other agent walks forward for 3 steps then turns. In the one step scenario, the model would have difficulty separating the two agents when they are walking straight for some of the time. A future direction therefore, might be to model long- and short-term dependencies, such as with LSTMs or with attention. 
-
-
 
 ![](1000epochs_class_n5.png)
 
@@ -207,7 +197,7 @@ Anyone who has trained VAEs understands they can be famously fickle. Throughout 
 
 **Acknowledgements**
 
-None of this would have been possible without the continual support of the OpenAI organization as a whole, which launched the Scholars program. In particular, I would like to highlight my mentor, Dr. Joshua Achiam, as one of the principal driving forces behind my continued progress in this project. Muraya Maigua and Christina Hendricks, managers of the program were excellent stewards of this initiative. Finally, my fellow Scholars were a great source of feedback and additional resources.
+None of this would have been possible without the continual support of the OpenAI organization as a whole, which launched the Scholars program. In particular, I would like to highlight my mentor, Dr. Joshua Achiam, as one of the principal driving forces behind my continued progress in this project. Muraya Maigua and Christina Hendrickson, managers of the program were excellent stewards of this initiative. Finally, my fellow Scholars were a great source of feedback and additional resources.
 
 **References**
 
