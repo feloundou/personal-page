@@ -32,5 +32,5 @@ user_groups:
 highlight_name: false
 email: tyna.eloundou@protonmail.com
 ---
-
+Current Role: Member of Technical Staff @ OpenAI
 
