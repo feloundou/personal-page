@@ -6,9 +6,7 @@ superuser: true
 authors:
   - admin
 title: Tyna Eloundou
-role: Scholar
-bio: My research interests include alignment (inner and outer variants), safety
-  and AI creativity.
+role: Member of Technical Staff
 interests:
   - Artificial Intelligence
   - Reinforcement Learning
@@ -21,21 +19,13 @@ social:
     link: "#contact"
   - icon: twitter
     icon_pack: fab
-    link: https://twitter.com/TynaEloundou
+    link: https://twitter.com/ThankYourNiceAI
   - icon: google-scholar
     icon_pack: ai
     link: https://scholar.google.com/citations?user=8dwbJHkAAAAJ&hl=en
   - icon: github
     icon_pack: fab
     link: https://github.com/feloundou
-education:
-  courses:
-    - course: MSc in Humanities and Social Sciences
-      institution: California Institute of Technology
-      year: null
-    - course: BSc in Economics
-      institution: Cornell University
-      year: null
 user_groups:
   - Researchers
   - Visitors
